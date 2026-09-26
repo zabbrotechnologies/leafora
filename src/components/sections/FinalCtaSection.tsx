@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, ShieldCheck, ThermometerSnowflake, Check } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, Check } from 'lucide-react';
 
 interface FinalCtaSectionProps {
   onRequestSample: () => void;
@@ -17,9 +17,9 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
 
       <div className="max-w-5xl mx-auto px-6 md:px-10 relative z-10 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-6 shadow-xs">
-          <ThermometerSnowflake className="w-3.5 h-3.5 text-[#14B8A6]" />
-          <span>EXPERIENCE THE REVOLUTION AT -40°C</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-6 shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+          <span>Cryogenic Preservation • Experience Leafora Fresh</span>
         </div>
 
         {/* Headline */}

@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Product } from '../../types';
 import { PRODUCTS_DATA } from '../../data/mockData';
-import { ArrowUpRight, Snowflake, Eye, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, Eye, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,9 +71,9 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
       {/* Top Header Bar */}
       <div className="max-w-7xl mx-auto w-full px-6 md:px-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-1">
-            <Snowflake className="w-3.5 h-3.5 text-[#14B8A6]" />
-            <span>GOURMET COLD-PRESS CUISINE // LEAFORA FRESH</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-2 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+            <span>Gourmet Cold-Press Cuisine • Leafora Fresh</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">
             What We Offer

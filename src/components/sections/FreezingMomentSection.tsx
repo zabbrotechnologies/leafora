@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Snowflake, ThermometerSnowflake, Sparkles, CheckCircle2, RotateCcw } from 'lucide-react';
+import { ThermometerSnowflake, Sparkles, CheckCircle2, RotateCcw } from 'lucide-react';
 import { FloatingIngredients } from '../common/FloatingIngredients';
+import { CryoSnowfallCanvas } from '../common/CryoSnowfallCanvas';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,7 +92,10 @@ export const FreezingMomentSection: React.FC = () => {
       id="freezing-moment"
       className="relative w-full h-screen bg-[#0F172A] text-white flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 md:px-14 overflow-hidden"
     >
-      {/* Floating Parallax Cryo Ice Elements */}
+      {/* Interactive Hover-Responsive Snowfall Canvas */}
+      <CryoSnowfallCanvas />
+
+      {/* Floating Parallax Cryo Ice Snowflakes */}
       <FloatingIngredients scene="freezing" />
 
       {/* Ambient Glacial Cold Light */}
@@ -99,22 +103,20 @@ export const FreezingMomentSection: React.FC = () => {
 
       {/* Top Header & Telemetry */}
       <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-20">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#14B8A6]/20 border border-[#14B8A6]/40 flex items-center justify-center text-[#14B8A6]">
-            <Snowflake className="w-4 h-4 animate-spin" style={{ animationDuration: '8s' }} />
-          </div>
+        <div className="flex items-center gap-3.5">
+          <div className="w-2 h-2 rounded-full bg-[#14B8A6] shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
           <div>
-            <span className="text-[11px] font-mono tracking-widest text-[#14B8A6] uppercase">
-              SIGNATURE CRYOGENIC MOMENT
+            <span className="text-xs font-semibold tracking-widest text-[#A8E6CF] uppercase block">
+              Signature Cryogenic Moment
             </span>
-            <h2 className="text-xl sm:text-2xl font-heading font-bold text-white">
+            <h2 className="text-xl sm:text-2xl font-heading font-bold text-white tracking-tight">
               The -40°C Instant Phase Lock
             </h2>
           </div>
         </div>
 
         {/* Real-time Temperature Gauge */}
-        <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.08] border border-white/15 backdrop-blur-md">
+        <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md">
           <ThermometerSnowflake className="w-5 h-5 text-[#A8E6CF]" />
           <div className="flex flex-col">
             <span className="text-[10px] font-mono tracking-widest text-white/50 uppercase">
@@ -169,8 +171,8 @@ export const FreezingMomentSection: React.FC = () => {
             {/* Frost Crystal Ring Graphics */}
             <div className="absolute inset-0 border-8 border-white/30 rounded-3xl opacity-70" />
             <div className="absolute inset-4 border border-[#B9E3F9]/40 rounded-2xl" />
-            <div className="absolute top-4 left-4 text-[10px] font-mono text-[#A8E6CF] tracking-widest bg-black/50 px-2.5 py-1 rounded-md backdrop-blur-xs">
-              CRYSTAL SIZE &lt; 4.8 MICRONS // NO CELL PUNCTURE
+            <div className="absolute top-4 left-4 text-[10px] font-mono text-[#A8E6CF] tracking-widest bg-black/60 px-3 py-1 rounded-md backdrop-blur-xs border border-white/10">
+              CRYSTAL SIZE &lt; 4.8 MICRONS • ZERO CELL DAMAGE
             </div>
           </div>
 
@@ -179,7 +181,7 @@ export const FreezingMomentSection: React.FC = () => {
             ref={headlineRef}
             className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-30 opacity-0 pointer-events-none"
           >
-            <div className="px-4 py-1.5 rounded-full bg-black/60 border border-[#14B8A6]/60 text-[#A8E6CF] text-xs font-mono tracking-widest uppercase mb-3 backdrop-blur-md">
+            <div className="px-4 py-1.5 rounded-full bg-black/70 border border-[#14B8A6]/40 text-[#A8E6CF] text-xs font-mono tracking-widest uppercase mb-3 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 inline mr-1.5" />
               CELLULAR MEMBRANE PRESERVED
             </div>
@@ -211,7 +213,7 @@ export const FreezingMomentSection: React.FC = () => {
           {isManualOverride && (
             <button
               onClick={() => setIsManualOverride(false)}
-              className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] flex items-center gap-1"
+              className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] flex items-center gap-1 cursor-pointer"
               title="Resume scroll control"
             >
               <RotateCcw className="w-3 h-3" />

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Sparkles, Snowflake, Compass } from 'lucide-react';
+import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { FloatingIngredients } from '../common/FloatingIngredients';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -157,15 +157,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
       <div className="max-w-7xl mx-auto px-6 md:px-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
         {/* Left Editorial Content */}
         <div ref={heroContentRef} className="lg:col-span-7 flex flex-col gap-6 z-20">
-          {/* Micro Tag / Badge */}
+          {/* Micro Tag / Editorial Label */}
           <div ref={badgesGroupRef} className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider uppercase text-[#0F172A] shadow-xs">
-              <Snowflake className="w-3.5 h-3.5 text-[#14B8A6] animate-spin" style={{ animationDuration: '10s' }} />
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider uppercase text-[#0F172A] shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
               <span>Gourmet Cold-Press Art • Authentic Indian Soul</span>
             </div>
-            <span className="text-xs font-mono text-[#0F172A]/50 tracking-widest hidden sm:inline-block">
-              // 100% PURE & CONCENTRATED
-            </span>
           </div>
 
           {/* Staggered Cinematic Headlines */}

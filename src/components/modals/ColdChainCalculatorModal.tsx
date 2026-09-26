@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Sparkles, DollarSign, Clock, Trash2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { X, DollarSign, Clock, Trash2, ArrowRight, ShieldCheck } from 'lucide-react';
 
 interface ColdChainCalculatorModalProps {
   isOpen: boolean;
@@ -49,9 +49,9 @@ export const ColdChainCalculatorModal: React.FC<ColdChainCalculatorModalProps> =
         <div className="p-6 sm:p-10">
           {/* Header */}
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-[11px] font-mono font-bold tracking-wider text-[#0F172A] uppercase mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#14B8A6]" />
-              <span>COMMERCIAL GASTRONOMY ROI MODEL</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full frost-badge text-[11px] font-semibold tracking-wider text-[#0F172A] uppercase mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+              <span>Commercial Gastronomy ROI Model</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-heading font-black text-[#0F172A] tracking-tight">
               Calculate Your Kitchen Savings

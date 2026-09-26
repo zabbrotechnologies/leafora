@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TRANSFORMATION_STAGES } from '../../data/mockData';
-import { ArrowRight, Thermometer, Clock, ShieldCheck, Activity } from 'lucide-react';
+import { ArrowRight, Thermometer, Clock, ShieldCheck } from 'lucide-react';
 
 export const ProductTransformationSection: React.FC = () => {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
@@ -18,9 +18,9 @@ export const ProductTransformationSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-4">
-              <Activity className="w-3.5 h-3.5 text-[#14B8A6]" />
-              <span>CONTINUOUS BIOLOGICAL STATE SHIFT</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-4 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+              <span>Continuous Biological State Shift</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">
               One Ingredient. Four States of Mastery.

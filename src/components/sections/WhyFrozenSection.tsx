@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { COMPARISON_DATA } from '../../data/mockData';
-import { CheckCircle2, XCircle, Sparkles, TrendingUp, ShieldCheck, Zap } from 'lucide-react';
+import { CheckCircle2, XCircle, Sparkles, TrendingUp, ShieldCheck } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,9 +102,9 @@ export const WhyFrozenSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
         {/* Main Section Statement */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-4">
-            <Zap className="w-3.5 h-3.5 text-[#14B8A6]" />
-            <span>THE SCIENCE OF CRYOGENIC SUPERIORITY</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-4 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+            <span>The Science of Cryogenic Superiority</span>
           </div>
 
           <h2

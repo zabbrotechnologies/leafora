@@ -71,9 +71,9 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({ onRequestS
     >
       <div className="max-w-7xl mx-auto px-6 md:px-10 mb-20">
         {/* Editorial Brand Narrative */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-6">
-            <Leaf className="w-3.5 h-3.5 text-[#14B8A6]" />
-            <span>OUR PHILOSOPHY // LEAFORA FRESH</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-6 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+            <span>Our Philosophy • Leafora Fresh</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-black text-[#0F172A] tracking-tight uppercase leading-[1.05]">

@@ -124,9 +124,9 @@ export const FreshnessMotionSection: React.FC = () => {
       {/* Top Header Statement */}
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-4 z-20">
         <div>
-          <span className="text-xs font-mono font-bold tracking-widest text-[#14B8A6] uppercase flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] animate-pulse" />
-            FRESHNESS IN MOTION // SCROLL STORY
+          <span className="text-xs font-semibold tracking-widest text-[#14B8A6] uppercase flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
+            Freshness In Motion • Scroll Journey
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-[#0F172A] tracking-tight mt-1">
             Freshness doesn't stop at harvest.
@@ -139,7 +139,7 @@ export const FreshnessMotionSection: React.FC = () => {
             <button
               key={step.stepNumber}
               onClick={() => setActiveStep(idx)}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer ${
                 activeStep === idx
                   ? 'bg-[#0F172A] text-white shadow-xs'
                   : 'text-[#0F172A]/50 hover:text-[#0F172A]'
@@ -163,8 +163,8 @@ export const FreshnessMotionSection: React.FC = () => {
             <div className="w-8 h-8 rounded-lg bg-[#14B8A6]/15 border border-[#14B8A6]/30 flex items-center justify-center text-[#14B8A6]">
               <StepIcon className="w-4 h-4" />
             </div>
-            <span className="text-xs font-mono font-bold tracking-widest text-[#0F172A]/60 uppercase">
-              PHASE {currentData.stepNumber} // {currentData.label}
+            <span className="text-xs font-semibold tracking-wider text-[#0F172A]/70 uppercase">
+              Phase {currentData.stepNumber} • {currentData.label}
             </span>
           </div>
 

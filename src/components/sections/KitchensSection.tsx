@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { KITCHEN_SEGMENTS } from '../../data/mockData';
-import { ArrowUpRight, Check, ChefHat, Clock, Quote, Package } from 'lucide-react';
+import { ArrowUpRight, Check, Clock, Quote, Package } from 'lucide-react';
 
 interface KitchensSectionProps {
   onRequestSample: () => void;
@@ -29,9 +29,9 @@ export const KitchensSection: React.FC<KitchensSectionProps> = ({ onRequestSampl
       <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-4">
-            <ChefHat className="w-3.5 h-3.5 text-[#14B8A6]" />
-            <span>FOR EVERY SCALE OF CULINARY PASSION</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-4 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+            <span>For Every Scale of Culinary Passion</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">
             Engineered For Every Kitchen.
@@ -47,15 +47,15 @@ export const KitchensSection: React.FC<KitchensSectionProps> = ({ onRequestSampl
             <button
               key={segment.id}
               onClick={() => setActiveKitchenId(segment.id)}
-              className={`px-5 py-3 rounded-2xl text-xs font-bold tracking-wide transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${
+              className={`px-5 py-3 rounded-2xl text-xs font-bold tracking-wide transition-all duration-300 flex items-center gap-2 whitespace-nowrap cursor-pointer ${
                 activeKitchenId === segment.id
                   ? 'bg-[#0F172A] text-white shadow-xl scale-102 border border-[#14B8A6]/40'
                   : 'bg-white/80 hover:bg-white text-[#0F172A]/70 border border-[#B9E3F9]/50'
               }`}
             >
               <span>{segment.name}</span>
-              <span className="text-[10px] font-mono opacity-50 hidden sm:inline">
-                // {segment.role}
+              <span className="text-[10px] font-medium opacity-60 hidden sm:inline">
+                • {segment.role}
               </span>
             </button>
           ))}

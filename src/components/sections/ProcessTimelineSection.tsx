@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PROCESS_STEPS } from '../../data/mockData';
-import { ShieldCheck, ThermometerSnowflake, Compass } from 'lucide-react';
+import { ShieldCheck, ThermometerSnowflake } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,9 +46,9 @@ export const ProcessTimelineSection: React.FC = () => {
       {/* Top Header & Section Title */}
       <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full frost-badge text-xs font-bold tracking-widest text-[#0F172A] uppercase mb-1">
-            <Compass className="w-3.5 h-3.5 text-[#14B8A6]" />
-            <span>01 TO 06 HARVEST-TO-FREEZER JOURNEY</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-2 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+            <span>Harvest-to-Freezer Journey • 6-Step Protocol</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">
             The Cryogenic Cold-Chain Protocol.

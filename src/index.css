@@ -94,12 +94,14 @@ h1, h2, h3, h4, .font-heading {
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
 }
 
-/* Frost Crystal Badge */
+/* Frost Crystal Editorial Badge */
 .frost-badge {
-  background: linear-gradient(135deg, rgba(168, 230, 207, 0.25) 0%, rgba(185, 227, 249, 0.25) 100%);
-  border: 1px solid rgba(20, 184, 166, 0.3);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   color: #0F172A;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
 }
 
 /* Ambient glow spheres */
