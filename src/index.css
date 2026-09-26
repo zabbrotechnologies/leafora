@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+:root {
+  --fresh-snow: #F8FBFC;
+  --ice-green: #A8E6CF;
+  --glacial-blue: #B9E3F9;
+  --deep-slate: #0F172A;
+  --crystalline-teal: #14B8A6;
+  --frost-white: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(185, 227, 249, 0.35);
+  --glass-glow: rgba(20, 184, 166, 0.12);
+  
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+html {
+  background-color: var(--fresh-snow);
+  color: var(--deep-slate);
+  font-family: var(--font-body);
+  scroll-behavior: auto; /* Lenis handles smooth scrolling */
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--fresh-snow);
+  color: var(--deep-slate);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Headings font application */
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.025em;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F8FBFC;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(20, 184, 166, 0.35);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 184, 166, 0.7);
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(185, 227, 249, 0.45);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(20, 184, 166, 0.4);
+  box-shadow: 0 24px 48px -12px rgba(20, 184, 166, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F8FBFC;
+  box-shadow: 0 24px 50px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(185, 227, 249, 0.5);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+/* Frost Crystal Badge */
+.frost-badge {
+  background: linear-gradient(135deg, rgba(168, 230, 207, 0.25) 0%, rgba(185, 227, 249, 0.25) 100%);
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  color: #0F172A;
+  backdrop-filter: blur(8px);
+}
+
+/* Ambient glow spheres */
+.ambient-glow-green {
+  background: radial-gradient(circle, rgba(168, 230, 207, 0.38) 0%, rgba(168, 230, 207, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.ambient-glow-blue {
+  background: radial-gradient(circle, rgba(185, 227, 249, 0.45) 0%, rgba(185, 227, 249, 0) 70%);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.ambient-glow-teal {
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.22) 0%, rgba(20, 184, 166, 0) 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* Text Gradients */
+.text-gradient-ice {
+  background: linear-gradient(135deg, #0F172A 0%, #14B8A6 60%, #0F172A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-frost {
+  background: linear-gradient(180deg, #FFFFFF 0%, #B9E3F9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Lenis Recommended CSS */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Ice Mask Reveal Animations */
+.clip-path-reveal {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clip-path-hidden {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+}
+
+/* Pulse animation for live cold status */
+@keyframes cold-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.15);
+  }
+}
+
+.animate-cold-pulse {
+  animation: cold-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Subtle floating particle shimmer */
+@keyframes frost-shimmer {
+  0% {
+    opacity: 0.4;
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-8px) rotate(180deg);
+  }
+  100% {
+    opacity: 0.4;
+    transform: translateY(0px) rotate(360deg);
+  }
+}
+
+.animate-frost-shimmer {
+  animation: frost-shimmer 8s ease-in-out infinite;
+}
+
+/* Hide default cursor on devices that support hover */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active {
+    cursor: none;
+  }
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active input,
+  body.custom-cursor-active select,
+  body.custom-cursor-active textarea,
+  body.custom-cursor-active [role="button"] {
+    cursor: none;
+  }
+}
+
+/* Accessibility: Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
