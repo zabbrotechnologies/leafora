@@ -37,12 +37,18 @@ export function App() {
   const [isCalculatorModalOpen, setIsCalculatorModalOpen] = useState(false);
 
   useEffect(() => {
-    // Initialize smooth scrolling with Lenis
+    // Ignore mobile address bar resize events to prevent jitter/stutter
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
+    // Initialize smooth scrolling with Lenis optimized for all devices
+    const isMobile = window.innerWidth < 1024 || 'ontouchstart' in window;
+    
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: isMobile ? 0.8 : 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
+      syncTouch: false, // Preserves native momentum touch scroll on mobile
     });
 
     // Synchronize Lenis scroll with GSAP ScrollTrigger
@@ -53,7 +59,7 @@ export function App() {
     };
 
     gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       lenis.destroy();

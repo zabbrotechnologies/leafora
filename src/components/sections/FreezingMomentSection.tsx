@@ -20,43 +20,78 @@ export const FreezingMomentSection: React.FC = () => {
     if (!container) return;
 
     const ctx = gsap.context(() => {
-      // ScrollTrigger for freezing transformation
-      ScrollTrigger.create({
-        trigger: container,
-        start: 'top top',
-        end: '+=200%',
-        pin: true,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          if (isManualOverride) return;
-          const progress = self.progress;
-          setFreezeProgress(progress);
+      const mm = gsap.matchMedia();
 
-          // Animate temperature from +18.4 down to -40.0
-          const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
-          if (tempNumberRef.current) {
-            tempNumberRef.current.innerText = `${currentTemp}°C`;
-          }
+      // Desktop: Pinned immersive freeze transition
+      mm.add('(min-width: 1024px)', () => {
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top top',
+          end: '+=180%',
+          pin: true,
+          scrub: 0.6,
+          onUpdate: (self) => {
+            if (isManualOverride) return;
+            const progress = self.progress;
+            setFreezeProgress(progress);
 
-          // Frost opacity and blur
-          if (frostLensRef.current) {
-            gsap.set(frostLensRef.current, {
-              opacity: progress * 0.95,
-              backdropFilter: `blur(${progress * 14}px)`,
-              webkitBackdropFilter: `blur(${progress * 14}px)`,
-            });
-          }
+            const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
+            if (tempNumberRef.current) {
+              tempNumberRef.current.innerText = `${currentTemp}°C`;
+            }
 
-          // Headline reveal when progress > 0.4
-          if (headlineRef.current) {
-            const headlineOpacity = Math.max(0, (progress - 0.35) / 0.65);
-            gsap.set(headlineRef.current, {
-              opacity: headlineOpacity,
-              y: (1 - headlineOpacity) * 35,
-              scale: 0.95 + headlineOpacity * 0.05,
-            });
-          }
-        },
+            if (frostLensRef.current) {
+              gsap.set(frostLensRef.current, {
+                opacity: progress * 0.95,
+                backdropFilter: `blur(${progress * 14}px)`,
+                webkitBackdropFilter: `blur(${progress * 14}px)`,
+              });
+            }
+
+            if (headlineRef.current) {
+              const headlineOpacity = Math.max(0, (progress - 0.35) / 0.65);
+              gsap.set(headlineRef.current, {
+                opacity: headlineOpacity,
+                y: (1 - headlineOpacity) * 35,
+                scale: 0.95 + headlineOpacity * 0.05,
+              });
+            }
+          },
+        });
+      });
+
+      // Mobile/Tablet: Unpinned smooth scroll-linked freeze without screen locking
+      mm.add('(max-width: 1023px)', () => {
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top 70%',
+          end: 'bottom 30%',
+          scrub: 0.5,
+          onUpdate: (self) => {
+            if (isManualOverride) return;
+            const progress = self.progress;
+            setFreezeProgress(progress);
+
+            const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
+            if (tempNumberRef.current) {
+              tempNumberRef.current.innerText = `${currentTemp}°C`;
+            }
+
+            if (frostLensRef.current) {
+              gsap.set(frostLensRef.current, {
+                opacity: progress * 0.95,
+              });
+            }
+
+            if (headlineRef.current) {
+              const headlineOpacity = Math.max(0, (progress - 0.3) / 0.7);
+              gsap.set(headlineRef.current, {
+                opacity: headlineOpacity,
+                y: (1 - headlineOpacity) * 20,
+              });
+            }
+          },
+        });
       });
     }, container);
 
@@ -90,7 +125,7 @@ export const FreezingMomentSection: React.FC = () => {
     <section
       ref={containerRef}
       id="freezing-moment"
-      className="relative w-full h-screen bg-[#0F172A] text-white flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 md:px-14 overflow-hidden"
+      className="relative w-full min-h-screen lg:h-screen bg-[#0F172A] text-white flex flex-col justify-between pt-24 lg:pt-28 pb-8 lg:pb-10 px-6 sm:px-10 md:px-14 overflow-hidden gap-8 lg:gap-0"
     >
       {/* Interactive Hover-Responsive Snowfall Canvas */}
       <CryoSnowfallCanvas />
@@ -169,9 +204,9 @@ export const FreezingMomentSection: React.FC = () => {
             </svg>
 
             {/* Frost Crystal Ring Graphics */}
-            <div className="absolute inset-0 border-8 border-white/30 rounded-3xl opacity-70" />
-            <div className="absolute inset-4 border border-[#B9E3F9]/40 rounded-2xl" />
-            <div className="absolute top-4 left-4 text-[10px] font-mono text-[#A8E6CF] tracking-widest bg-black/60 px-3 py-1 rounded-md backdrop-blur-xs border border-white/10">
+            <div className="absolute inset-0 border-4 sm:border-8 border-white/30 rounded-3xl opacity-70" />
+            <div className="absolute inset-2 sm:inset-4 border border-[#B9E3F9]/40 rounded-2xl" />
+            <div className="hidden sm:block absolute top-4 left-4 text-[10px] font-mono text-[#A8E6CF] tracking-widest bg-black/60 px-3 py-1 rounded-md backdrop-blur-xs border border-white/10">
               CRYSTAL SIZE &lt; 4.8 MICRONS • ZERO CELL DAMAGE
             </div>
           </div>
@@ -179,16 +214,16 @@ export const FreezingMomentSection: React.FC = () => {
           {/* Luxury Floating Editorial Message (Fades in on freeze lock) */}
           <div
             ref={headlineRef}
-            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-30 opacity-0 pointer-events-none"
+            className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center z-30 opacity-0 pointer-events-none"
           >
-            <div className="px-4 py-1.5 rounded-full bg-black/70 border border-[#14B8A6]/40 text-[#A8E6CF] text-xs font-mono tracking-widest uppercase mb-3 backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 inline mr-1.5" />
+            <div className="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/70 border border-[#14B8A6]/40 text-[#A8E6CF] text-[10px] sm:text-xs font-mono tracking-widest uppercase mb-2 sm:mb-3 backdrop-blur-md">
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 inline mr-1" />
               CELLULAR MEMBRANE PRESERVED
             </div>
-            <h3 className="text-4xl sm:text-5xl md:text-6xl font-heading font-black tracking-tight text-white uppercase drop-shadow-2xl">
+            <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-black tracking-tight text-white uppercase drop-shadow-2xl">
               LOCKED AT ITS BEST.
             </h3>
-            <p className="text-sm sm:text-base text-white/85 max-w-lg mt-3 font-normal drop-shadow-md">
+            <p className="text-xs sm:text-sm md:text-base text-white/85 max-w-lg mt-2 sm:mt-3 font-normal drop-shadow-md">
               Sub-second cryogenic transition freezes intercellular moisture without expanding or piercing cell walls. The biological clock stops.
             </p>
           </div>

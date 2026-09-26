@@ -32,20 +32,29 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
     if (!container || !track) return;
 
     const ctx = gsap.context(() => {
-      // Calculate total horizontal scroll width
-      const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 140);
+      const mm = gsap.matchMedia();
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: () => `+=${track.scrollWidth - window.innerWidth + 400}`,
-          pin: true,
-          scrub: 0.9,
-          invalidateOnRefresh: true,
-        },
+      // Desktop: Pinned horizontal scrub
+      mm.add('(min-width: 1024px)', () => {
+        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 140);
+
+        gsap.to(track, {
+          x: getScrollAmount,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: container,
+            start: 'top top',
+            end: () => `+=${track.scrollWidth - window.innerWidth + 400}`,
+            pin: true,
+            scrub: 0.9,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+
+      // Mobile: Native horizontal swipe without pin trapping
+      mm.add('(max-width: 1023px)', () => {
+        gsap.set(track, { clearProps: 'all' });
       });
     }, container);
 
@@ -54,19 +63,25 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
 
   const scrollTrack = (direction: 'left' | 'right') => {
     if (!trackRef.current) return;
-    const offset = direction === 'left' ? -380 : 380;
-    gsap.to(trackRef.current, {
-      x: `+=${-offset}`,
-      duration: 0.5,
-      ease: 'power2.out',
-    });
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) {
+      const offset = direction === 'left' ? -300 : 300;
+      trackRef.current.parentElement?.scrollBy({ left: offset, behavior: 'smooth' });
+    } else {
+      const offset = direction === 'left' ? -380 : 380;
+      gsap.to(trackRef.current, {
+        x: `+=${-offset}`,
+        duration: 0.5,
+        ease: 'power2.out',
+      });
+    }
   };
 
   return (
     <section
       ref={containerRef}
       id="products"
-      className="relative w-full h-screen bg-[#F8FBFC] flex flex-col justify-between pt-28 pb-10 overflow-hidden border-t border-[#B9E3F9]/40"
+      className="relative w-full min-h-screen lg:h-screen bg-[#F8FBFC] flex flex-col justify-between pt-24 lg:pt-28 pb-10 overflow-hidden border-t border-[#B9E3F9]/40 gap-6 lg:gap-0"
     >
       {/* Top Header Bar */}
       <div className="max-w-7xl mx-auto w-full px-6 md:px-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
@@ -85,12 +100,12 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
 
         {/* Category Filter Pills & Arrow Controls */}
         <div className="flex items-center gap-3">
-          <div className="hidden lg:flex items-center gap-1.5 bg-white/80 backdrop-blur-md p-1 rounded-full border border-[#B9E3F9]/60 shadow-xs">
+          <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur-md p-1 rounded-full border border-[#B9E3F9]/60 shadow-xs overflow-x-auto">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all ${
+                className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat
                     ? 'bg-[#0F172A] text-white shadow-xs'
                     : 'text-[#0F172A]/60 hover:text-[#0F172A]'
@@ -100,28 +115,30 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
               </button>
             ))}
           </div>
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => scrollTrack('left')}
-              className="w-9 h-9 rounded-full bg-white/90 border border-[#B9E3F9]/60 flex items-center justify-center text-[#0F172A] hover:bg-[#0F172A] hover:text-white transition-all shadow-xs"
+              className="w-9 h-9 rounded-full bg-white/90 border border-[#B9E3F9]/60 flex items-center justify-center text-[#0F172A] hover:bg-[#0F172A] hover:text-white transition-all shadow-xs cursor-pointer"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => scrollTrack('right')}
-              className="w-9 h-9 rounded-full bg-white/90 border border-[#B9E3F9]/60 flex items-center justify-center text-[#0F172A] hover:bg-[#0F172A] hover:text-white transition-all shadow-xs"
+              className="w-9 h-9 rounded-full bg-white/90 border border-[#B9E3F9]/60 flex items-center justify-center text-[#0F172A] hover:bg-[#0F172A] hover:text-white transition-all shadow-xs cursor-pointer"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
+      </div>
 
       {/* Horizontal Scrolling Track */}
-      <div className="w-full my-auto overflow-visible z-20">
+      <div className="w-full my-auto overflow-x-auto lg:overflow-visible z-20 no-scrollbar snap-x">
         <div
           ref={trackRef}
-          className="flex gap-8 px-6 md:px-16 w-max items-center py-4"
+          className="flex gap-6 lg:gap-8 px-6 md:px-16 w-max items-center py-4"
         >
           {filteredProducts.map((product) => (
             <div

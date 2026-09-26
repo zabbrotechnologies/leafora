@@ -92,44 +92,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
         '-=0.5'
       );
 
-      // Section 08: Hero Scroll Transformation
-      // When scrolling down, product moves toward center, scales, background glow expands, text fades and journeys into next section
-      if (containerRef.current && heroImageContainerRef.current) {
-        gsap.to(heroImageContainerRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-          y: 140,
-          scale: 1.12,
-          ease: 'none',
-        });
+      // Hero Scroll Transformation (Scoped to desktop to prevent mobile overlap)
+      const mm = gsap.matchMedia();
 
-        gsap.to(heroContentRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: '60% top',
-            scrub: 0.5,
-          },
-          y: -80,
-          opacity: 0.1,
-          ease: 'none',
-        });
+      mm.add('(min-width: 1024px)', () => {
+        if (heroImageContainerRef.current) {
+          gsap.to(heroImageContainerRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 0.8,
+            },
+            y: 120,
+            scale: 1.08,
+            ease: 'none',
+          });
+        }
 
-        gsap.to(ambientGlowRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-          scale: 1.4,
-          opacity: 0.7,
-        });
-      }
+        if (heroContentRef.current) {
+          gsap.to(heroContentRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: '60% top',
+              scrub: 0.5,
+            },
+            y: -60,
+            opacity: 0.15,
+            ease: 'none',
+          });
+        }
+
+        if (ambientGlowRef.current) {
+          gsap.to(ambientGlowRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 1,
+            },
+            scale: 1.3,
+            opacity: 0.7,
+          });
+        }
+      });
     }, containerRef);
 
     return () => ctx.revert();
