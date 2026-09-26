@@ -71,7 +71,6 @@ export const FreezingMomentSection: React.FC = () => {
     }
     if (frostLensRef.current) {
       frostLensRef.current.style.backdropFilter = `blur(${val * 14}px)`;
-      frostLensRef.current.style.webkitBackdropFilter = `blur(${val * 14}px)`;
       gsap.set(frostLensRef.current, {
         opacity: val * 0.95,
       });

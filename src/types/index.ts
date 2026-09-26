@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   name: string;
   subtitle: string;
-  category: 'Vegetables' | 'Fruits' | 'Purees & Grated' | 'Chef Mixes';
+  category: 'What We Offer' | 'Staples' | 'Vegetables' | 'Fruits' | 'Purees & Grated' | 'Chef Mixes' | string;
   badge: string;
   image: string;
   floatingAsset?: string;
