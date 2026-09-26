@@ -44,16 +44,15 @@ export const IceParticlesCanvas: React.FC = () => {
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // Generate subtle crystalline particles (lightweight on mobile)
-    const isMobile = window.innerWidth < 768;
-    const particleCount = isMobile ? 14 : Math.min(36, Math.floor(window.innerWidth / 35));
+    // Generate subtle crystalline particles
+    const particleCount = Math.min(45, Math.floor(window.innerWidth / 30));
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 2.0 + 0.8,
+        radius: Math.random() * 2.2 + 0.8,
         vx: (Math.random() - 0.5) * 0.25,
         vy: Math.random() * 0.35 + 0.15, // Gentle downward drift
         alpha: Math.random() * 0.45 + 0.15,

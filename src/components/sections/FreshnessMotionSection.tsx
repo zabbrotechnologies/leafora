@@ -58,55 +58,14 @@ export const FreshnessMotionSection: React.FC = () => {
     if (!container) return;
 
     const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-
-      // Desktop: Pinned sequential scrub
-      mm.add('(min-width: 1024px)', () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: container,
-            start: 'top top',
-            end: '+=280%',
-            pin: true,
-            scrub: 0.8,
-            onUpdate: (self) => {
-              const stepIndex = Math.min(
-                STORY_STEPS.length - 1,
-                Math.floor(self.progress * STORY_STEPS.length)
-              );
-              setActiveStep(stepIndex);
-            },
-          },
-        });
-
-        STORY_STEPS.forEach((_, i) => {
-          const stepEl = container.querySelector(`.story-step-${i}`);
-          if (stepEl && i > 0) {
-            tl.fromTo(
-              stepEl,
-              {
-                opacity: 0,
-                y: 60,
-                scale: 0.95,
-              },
-              {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 1,
-              }
-            );
-          }
-        });
-      });
-
-      // Mobile: Scroll-linked step progression without pin trapping
-      mm.add('(max-width: 1023px)', () => {
-        ScrollTrigger.create({
+      // Create pinned ScrollTrigger for the 4 words progression
+      const tl = gsap.timeline({
+        scrollTrigger: {
           trigger: container,
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: 0.5,
+          start: 'top top',
+          end: '+=320%',
+          pin: true,
+          scrub: 0.8,
           onUpdate: (self) => {
             const stepIndex = Math.min(
               STORY_STEPS.length - 1,
@@ -114,7 +73,30 @@ export const FreshnessMotionSection: React.FC = () => {
             );
             setActiveStep(stepIndex);
           },
-        });
+        },
+      });
+
+      // Animate steps sequentially
+      STORY_STEPS.forEach((_, i) => {
+        const stepEl = container.querySelector(`.story-step-${i}`);
+        if (stepEl && i > 0) {
+          tl.fromTo(
+            stepEl,
+            {
+              opacity: 0,
+              y: 80,
+              scale: 0.9,
+              filter: 'blur(10px)',
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 1,
+            }
+          );
+        }
       });
     }, container);
 
@@ -128,7 +110,7 @@ export const FreshnessMotionSection: React.FC = () => {
     <section
       ref={containerRef}
       id="story"
-      className="relative w-full min-h-screen lg:h-screen bg-[#F8FBFC] flex flex-col justify-between pt-24 lg:pt-28 pb-8 lg:pb-10 px-6 sm:px-10 md:px-14 overflow-hidden border-t border-[#B9E3F9]/30 gap-8 lg:gap-0"
+      className="relative w-full h-screen bg-[#F8FBFC] flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 md:px-14 overflow-hidden border-t border-[#B9E3F9]/30"
     >
       {/* Dynamic Background Backdrop with Image Glow */}
       <div className="absolute inset-0 pointer-events-none -z-10 opacity-15 transition-opacity duration-700">

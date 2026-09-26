@@ -15,41 +15,20 @@ export const ProcessTimelineSection: React.FC = () => {
     if (!container) return;
 
     const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-
-      // Desktop: Pinned scrub timeline
-      mm.add('(min-width: 1024px)', () => {
-        ScrollTrigger.create({
-          trigger: container,
-          start: 'top top',
-          end: '+=300%',
-          pin: true,
-          scrub: 0.8,
-          onUpdate: (self) => {
-            const stepIndex = Math.min(
-              PROCESS_STEPS.length - 1,
-              Math.floor(self.progress * PROCESS_STEPS.length)
-            );
-            setActiveStepIndex(stepIndex);
-          },
-        });
-      });
-
-      // Mobile: Smooth unpinned scroll progression
-      mm.add('(max-width: 1023px)', () => {
-        ScrollTrigger.create({
-          trigger: container,
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: 0.5,
-          onUpdate: (self) => {
-            const stepIndex = Math.min(
-              PROCESS_STEPS.length - 1,
-              Math.floor(self.progress * PROCESS_STEPS.length)
-            );
-            setActiveStepIndex(stepIndex);
-          },
-        });
+      // Pinned timeline with scrub
+      ScrollTrigger.create({
+        trigger: container,
+        start: 'top top',
+        end: '+=350%',
+        pin: true,
+        scrub: 0.8,
+        onUpdate: (self) => {
+          const stepIndex = Math.min(
+            PROCESS_STEPS.length - 1,
+            Math.floor(self.progress * PROCESS_STEPS.length)
+          );
+          setActiveStepIndex(stepIndex);
+        },
       });
     }, container);
 
@@ -62,7 +41,7 @@ export const ProcessTimelineSection: React.FC = () => {
     <section
       ref={containerRef}
       id="process"
-      className="relative w-full min-h-screen lg:h-screen bg-[#F8FBFC] flex flex-col justify-between pt-24 lg:pt-28 pb-8 lg:pb-10 px-6 sm:px-10 md:px-14 overflow-hidden border-t border-[#B9E3F9]/40 gap-8 lg:gap-0"
+      className="relative w-full h-screen bg-[#F8FBFC] flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 md:px-14 overflow-hidden border-t border-[#B9E3F9]/40"
     >
       {/* Top Header & Section Title */}
       <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">

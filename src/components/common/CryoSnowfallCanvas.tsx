@@ -69,9 +69,8 @@ export const CryoSnowfallCanvas: React.FC = () => {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     parent.addEventListener('mouseleave', handleMouseLeave);
 
-    // Initialize snow particles (lightweight on mobile)
-    const isMobile = window.innerWidth < 768;
-    const particleCount = isMobile ? 22 : Math.min(55, Math.floor(width / 24));
+    // Initialize snow particles
+    const particleCount = Math.min(85, Math.floor(width / 14));
     const particles: SnowflakeParticle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
