@@ -141,10 +141,10 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
         <div>
           <span className="text-xs font-mono font-bold tracking-widest text-[#14B8A6] uppercase flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
-            Signature Cryo-Locked Harvests
+            Exclusive Selection • Cryo-Locked Integrity
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-[#0F172A] tracking-tight mt-1">
-            Scroll Product Showcase
+            Our Exclusive Products
           </h2>
         </div>
 
@@ -208,7 +208,7 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
             <div className="w-full sm:w-1/2 flex flex-col justify-between gap-4">
               <div>
                 <span className="text-[11px] font-mono font-bold tracking-widest text-[#14B8A6] uppercase block mb-1">
-                  PRODUCT 0{idx + 1} • {product.category}
+                  EXCLUSIVE SELECTION 0{idx + 1}
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-heading font-black text-[#0F172A] tracking-tight">
                   {product.name}
@@ -256,12 +256,6 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Bottom Minimal Scroll Instruction */}
-      <div className="max-w-7xl mx-auto w-full flex items-center justify-between text-[11px] font-mono text-[#0F172A]/50 z-20">
-        <span>SCROLL TO CYCLE PRODUCTS</span>
-        <span>COCONUT • GREENS • MASALA • CURRY BASE • PEAS • CORN</span>
       </div>
     </section>
   );
