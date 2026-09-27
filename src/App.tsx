@@ -13,9 +13,7 @@ import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 
 import { HeroSection } from './components/sections/HeroSection';
-import { FreshnessMotionSection } from './components/sections/FreshnessMotionSection';
 import { FreezingMomentSection } from './components/sections/FreezingMomentSection';
-import { ProductTransformationSection } from './components/sections/ProductTransformationSection';
 import { ProductShowcaseSection } from './components/sections/ProductShowcaseSection';
 import { WhyFrozenSection } from './components/sections/WhyFrozenSection';
 import { ProcessTimelineSection } from './components/sections/ProcessTimelineSection';
@@ -93,48 +91,42 @@ export function App() {
         onOpenCalculator={() => setIsCalculatorModalOpen(true)}
       />
 
-      {/* Main Content Sections */}
+      {/* Main Content Sections - Storytelling Chapters */}
       <main className="relative z-20">
-        {/* 07 & 08: Cinematic Hero & Scroll Transformation */}
+        {/* Chapter 01: Hero & Cryogenic Phase Lock Introduction */}
         <HeroSection
           onRequestSample={() => setIsSampleModalOpen(true)}
           onExploreRange={scrollToRange}
         />
 
-        {/* 09: Freshness in Motion (Pinned Scroll Story) */}
-        <FreshnessMotionSection />
-
-        {/* 10: Freezing Moment (Signature -40°C Phase Lock Animation) */}
+        {/* Chapter 01.5: Freezing Moment (-40°C cryogenic instant lock) */}
         <FreezingMomentSection />
 
-        {/* 11: Product Transformation State Machine (Raw -> Prepared -> Frozen -> Ready) */}
-        <ProductTransformationSection />
-
-        {/* 12 & 13: Product Showcase (Pinned Horizontal Gallery) */}
+        {/* Chapter 02: Dynamic Product Discovery (Dominant Featured Hero + Selector Rail) */}
         <ProductShowcaseSection
           onSelectProduct={(prod) => setSelectedProduct(prod)}
           onRequestSample={() => setIsSampleModalOpen(true)}
         />
 
-        {/* 14: Why Frozen Kinetic Typography & Scientific Matrix */}
+        {/* Chapter 03: Why Leafora (4 Interactive Value Pillars + Comparative Bio-Potency Matrix) */}
         <WhyFrozenSection />
 
-        {/* 15: 6-Stage Pinned Process Timeline */}
+        {/* Chapter 04: Process Story (6-Stage Pinned Harvest-to-Plate Cold Chain) */}
         <ProcessTimelineSection />
 
-        {/* 16 & 17: For Every Kitchen Multi-Segment Culinary Showcase */}
+        {/* Chapter 05: Who We Serve (Multi-Segment Culinary Solutions & Sample Shippers) */}
         <KitchensSection onRequestSample={() => setIsSampleModalOpen(true)} />
 
-        {/* 18: B2B & Wholesale Solutions */}
+        {/* Chapter 06: Commercial B2B Solutions & Yield Calculator */}
         <B2BSection
           onRequestSample={() => setIsSampleModalOpen(true)}
           onOpenCalculator={() => setIsCalculatorModalOpen(true)}
         />
 
-        {/* 19, 20 & 21: Brand Story, Expanding Image Masks & Fullscreen Sensory Moment */}
+        {/* Chapter 07: Brand Story & Soil Stewardship */}
         <BrandStorySection onRequestSample={() => setIsSampleModalOpen(true)} />
 
-        {/* 25: High-Converting Final Call to Action */}
+        {/* Chapter 08: High-Converting Final Call to Action */}
         <FinalCtaSection
           onRequestSample={() => setIsSampleModalOpen(true)}
           onOpenCalculator={() => setIsCalculatorModalOpen(true)}

@@ -1,43 +1,37 @@
 import React, { useState } from 'react';
 import { KITCHEN_SEGMENTS } from '../../data/mockData';
-import { ArrowUpRight, Check, Clock, Quote, Package } from 'lucide-react';
+import { ArrowUpRight, Check, Clock, Quote, Package, Sparkles } from 'lucide-react';
 
 interface KitchensSectionProps {
   onRequestSample: () => void;
+  onOpenCalculator?: () => void;
 }
 
-export const KitchensSection: React.FC<KitchensSectionProps> = ({ onRequestSample }) => {
+export const KitchensSection: React.FC<KitchensSectionProps> = ({ onRequestSample, onOpenCalculator }) => {
   const [activeKitchenId, setActiveKitchenId] = useState('restaurant');
-
   const activeSegment =
-    KITCHEN_SEGMENTS.find((k) => k.id === activeKitchenId) || KITCHEN_SEGMENTS[0];
+    KITCHEN_SEGMENTS.find((s) => s.id === activeKitchenId) || KITCHEN_SEGMENTS[0];
 
   return (
     <section
       id="kitchens"
-      className="relative w-full py-28 sm:py-36 bg-[#F8FBFC] overflow-hidden border-t border-[#B9E3F9]/40"
+      className="relative w-full py-24 sm:py-36 bg-[#F8FBFC] overflow-hidden border-t border-[#B9E3F9]/40"
     >
-      {/* Dynamic Background Image Ambiance */}
-      <div className="absolute inset-0 pointer-events-none opacity-10 transition-opacity duration-1000">
-        <img
-          src={activeSegment.heroImage}
-          alt={activeSegment.name}
-          className="w-full h-full object-cover filter blur-3xl scale-110"
-        />
-      </div>
+      {/* Background Soft Glow */}
+      <div className="absolute top-1/3 -left-20 w-[500px] h-[500px] rounded-full ambient-glow-green opacity-20 pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-4 shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
-            <span>For Every Scale of Culinary Passion</span>
+            <span>Commercial B2B & Foodservice Solutions</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">
             Engineered For Every Kitchen.
           </h2>
-          <p className="text-base text-[#0F172A]/70 mt-3">
-            From Michelin-starred fine dining kitchens to modern home dining tables, explore how GLACIAL™ IQF produce elevates gastronomy with zero preparation friction.
+          <p className="text-base text-[#0F172A]/70 mt-3 leading-relaxed">
+            From Michelin-starred fine dining kitchens and hotel banquets to fast-casual cloud kitchens and modern home dining. Select a culinary sector to view tailored formats.
           </p>
         </div>
 
@@ -105,41 +99,45 @@ export const KitchensSection: React.FC<KitchensSectionProps> = ({ onRequestSampl
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={onRequestSample}
-                className="px-6 py-3 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide hover:bg-[#14B8A6] hover:text-[#0F172A] transition-all flex items-center gap-2"
+                className="px-6 py-3.5 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide hover:bg-[#14B8A6] hover:text-[#0F172A] transition-all flex items-center gap-2 shadow-md cursor-pointer"
               >
                 <span>Request {activeSegment.name} Sample Pack</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-4 h-4" />
               </button>
 
-              <div className="flex items-center gap-2 text-xs font-mono text-[#0F172A]/70">
-                <Clock className="w-4 h-4 text-[#14B8A6]" />
-                <span>Saves {activeSegment.prepTimeSaved}</span>
-              </div>
+              {onOpenCalculator && (
+                <button
+                  onClick={onOpenCalculator}
+                  className="px-5 py-3.5 rounded-full bg-white text-[#0F172A] text-xs font-bold tracking-wide border border-[#B9E3F9]/60 hover:bg-white shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#14B8A6]" />
+                  <span>Calculate Kitchen ROI</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Right Column: High-Res Plating Imagery & Packaging Badges */}
-          <div className="lg:col-span-6 relative flex flex-col gap-4">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl group">
+          {/* Right Column: Hero Visual with Overlays */}
+          <div className="lg:col-span-6 relative">
+            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl relative group bg-[#0F172A]/5">
               <img
+                key={activeSegment.id}
                 src={activeSegment.heroImage}
-                alt={activeSegment.headline}
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                alt={activeSegment.name}
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-transparent to-transparent pointer-events-none" />
 
-              {/* Floating Pack Format Badge */}
-              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between p-3 rounded-xl bg-white/90 backdrop-blur-md border border-[#B9E3F9]/60 text-xs shadow-md">
-                <div className="flex items-center gap-2">
-                  <Package className="w-4 h-4 text-[#14B8A6]" />
-                  <div>
-                    <span className="text-[10px] font-mono text-[#0F172A]/50 uppercase block">
-                      Recommended Packaging Format
-                    </span>
-                    <span className="font-bold text-[#0F172A]">
-                      {activeSegment.recommendedPacks}
-                    </span>
-                  </div>
+              {/* Verified Yield Badge on Image */}
+              <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-between text-white text-xs">
+                <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/15">
+                  <Package className="w-4 h-4 text-[#A8E6CF]" />
+                  <span className="font-mono font-bold">{activeSegment.recommendedPacks}</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 bg-[#14B8A6] text-[#0F172A] px-3 py-1.5 rounded-xl font-bold font-mono text-xs shadow-md">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>{activeSegment.prepTimeSaved} Saved</span>
                 </div>
               </div>
             </div>
