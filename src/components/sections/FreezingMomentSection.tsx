@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ThermometerSnowflake, Sparkles, CheckCircle2, RotateCcw } from 'lucide-react';
+import { ThermometerSnowflake, Sparkles, CheckCircle2 } from 'lucide-react';
 import { FloatingIngredients } from '../common/FloatingIngredients';
 import { CryoSnowfallCanvas } from '../common/CryoSnowfallCanvas';
 
@@ -13,7 +13,35 @@ export const FreezingMomentSection: React.FC = () => {
   const headlineRef = useRef<HTMLDivElement | null>(null);
   const tempNumberRef = useRef<HTMLSpanElement | null>(null);
   const [freezeProgress, setFreezeProgress] = useState(0);
-  const [isManualOverride, setIsManualOverride] = useState(false);
+
+  const applyFreezeVisuals = (progress: number, isDesktop: boolean) => {
+    setFreezeProgress(progress);
+
+    // Animate temperature from +18.4 down to -40.0
+    const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
+    if (tempNumberRef.current) {
+      tempNumberRef.current.innerText = `${currentTemp}°C`;
+    }
+
+    // Frost opacity and blur
+    if (frostLensRef.current) {
+      gsap.set(frostLensRef.current, {
+        opacity: progress * 0.95,
+        backdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
+        webkitBackdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
+      });
+    }
+
+    // Headline reveal when progress > 0.35
+    if (headlineRef.current) {
+      const headlineOpacity = Math.max(0, (progress - 0.3) / 0.7);
+      gsap.set(headlineRef.current, {
+        opacity: headlineOpacity,
+        y: (1 - headlineOpacity) * (isDesktop ? 25 : 12),
+        scale: 0.96 + headlineOpacity * 0.04,
+      });
+    }
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -29,71 +57,25 @@ export const FreezingMomentSection: React.FC = () => {
       (context) => {
         const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
 
-        // ScrollTrigger for freezing transformation
+        // Faster, brisker ScrollTrigger for freezing transformation
         ScrollTrigger.create({
           trigger: container,
           start: 'top top',
-          end: isDesktop ? '+=200%' : '+=140%',
+          end: isDesktop ? '+=100%' : '+=70%',
           pin: true,
-          scrub: 0.6,
+          scrub: 0.35,
           onUpdate: (self) => {
-            if (isManualOverride) return;
-            const progress = self.progress;
-            setFreezeProgress(progress);
-
-            // Animate temperature from +18.4 down to -40.0
-            const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
-            if (tempNumberRef.current) {
-              tempNumberRef.current.innerText = `${currentTemp}°C`;
-            }
-
-            // Frost opacity and blur
-            if (frostLensRef.current) {
-              gsap.set(frostLensRef.current, {
-                opacity: progress * 0.95,
-                backdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
-                webkitBackdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
-              });
-            }
-
-            // Headline reveal when progress > 0.4
-            if (headlineRef.current) {
-              const headlineOpacity = Math.max(0, (progress - 0.35) / 0.65);
-              gsap.set(headlineRef.current, {
-                opacity: headlineOpacity,
-                y: (1 - headlineOpacity) * (isDesktop ? 35 : 15),
-                scale: 0.95 + headlineOpacity * 0.05,
-              });
-            }
+            applyFreezeVisuals(self.progress, isDesktop);
           },
         });
       }
     );
 
     return () => mm.revert();
-  }, [isManualOverride]);
+  }, []);
 
   const handleManualSlider = (val: number) => {
-    setIsManualOverride(true);
-    setFreezeProgress(val);
-    const currentTemp = (+18.4 - val * (18.4 + 40.0)).toFixed(1);
-    if (tempNumberRef.current) {
-      tempNumberRef.current.innerText = `${currentTemp}°C`;
-    }
-    if (frostLensRef.current) {
-      frostLensRef.current.style.backdropFilter = `blur(${val * 12}px)`;
-      gsap.set(frostLensRef.current, {
-        opacity: val * 0.95,
-      });
-    }
-    if (headlineRef.current) {
-      const headlineOpacity = Math.max(0, (val - 0.35) / 0.65);
-      gsap.set(headlineRef.current, {
-        opacity: headlineOpacity,
-        y: (1 - headlineOpacity) * 20,
-        scale: 0.95 + headlineOpacity * 0.05,
-      });
-    }
+    applyFreezeVisuals(val, window.innerWidth >= 1024);
   };
 
   return (
@@ -217,19 +199,9 @@ export const FreezingMomentSection: React.FC = () => {
             step="0.01"
             value={freezeProgress}
             onChange={(e) => handleManualSlider(parseFloat(e.target.value))}
-            className="w-20 sm:w-24 accent-[#14B8A6] cursor-pointer"
+            className="w-20 sm:w-28 accent-[#14B8A6] cursor-pointer"
             aria-label="Cryogenic freeze slider"
           />
-          {isManualOverride && (
-            <button
-              onClick={() => setIsManualOverride(false)}
-              className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[10px] flex items-center gap-1 cursor-pointer"
-              title="Resume scroll control"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>Auto</span>
-            </button>
-          )}
         </div>
 
         {/* Phase State Indicators */}
