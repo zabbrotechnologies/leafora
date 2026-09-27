@@ -170,7 +170,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
           <div ref={badgesGroupRef} className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider uppercase text-[#0F172A] shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
-              <span>Gourmet Cold-Press Art • Authentic Indian Soul</span>
+              <span>Real Farm Harvests • Frozen at Peak</span>
             </div>
           </div>
 
@@ -180,13 +180,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
               ref={headlinePart1Ref}
               className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-[#0F172A] uppercase leading-[0.92]"
             >
-              LUXURY CUISINE.
+              REAL FOOD.
             </h1>
             <h1
               ref={headlinePart2Ref}
               className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-gradient-ice uppercase leading-[0.92] mt-1"
             >
-              AUTHENTIC SOUL.
+              READY WHEN YOU ARE.
             </h1>
           </div>
 
@@ -195,17 +195,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
             ref={subcopyRef}
             className="text-base sm:text-lg text-[#0F172A]/75 max-w-xl font-normal leading-relaxed"
           >
-            <strong>Leafora Fresh</strong> delivers luxury frozen cuisine, capturing authentic Indian soul using gourmet cold-press art. 
-            From stone-crushed masala cubes and rich curry base reductions to blanched farm greens and pure coastal coconut blocks.
+            <strong>Leafora Fresh</strong> makes everyday cooking simple and flavorful with cryogenically locked vegetables, pure coconut blocks, and stone-crushed masala cubes frozen at -40°C within hours of morning harvest.
           </p>
 
           {/* CTA Group */}
           <div ref={ctaGroupRef} className="flex flex-wrap items-center gap-4 pt-2">
             <button
               onClick={onExploreRange}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#0F172A] text-white text-sm font-semibold tracking-wide shadow-[0_10px_25px_-5px_rgba(15,23,42,0.25)] hover:shadow-[0_15px_30px_-5px_rgba(20,184,166,0.35)] transition-all duration-300 hover:scale-[1.02]"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#0F172A] text-white text-sm font-semibold tracking-wide shadow-[0_10px_25px_-5px_rgba(15,23,42,0.25)] hover:shadow-[0_15px_30px_-5px_rgba(20,184,166,0.35)] transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
-              <span>Explore What We Offer</span>
+              <span>Explore Our Products</span>
               <div className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
                 <ArrowRight className="w-3.5 h-3.5 text-[#A8E6CF]" />
               </div>
@@ -213,10 +212,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
 
             <button
               onClick={onRequestSample}
-              className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-white/80 hover:bg-white text-[#0F172A] text-sm font-semibold tracking-wide border border-[#B9E3F9]/60 backdrop-blur-md shadow-xs transition-all duration-300 hover:border-[#14B8A6]/60"
+              className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-white/80 hover:bg-white text-[#0F172A] text-sm font-semibold tracking-wide border border-[#B9E3F9]/60 backdrop-blur-md shadow-xs transition-all duration-300 hover:border-[#14B8A6]/60 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-[#14B8A6]" />
-              <span>Browse Wholesale & Retail Packs</span>
+              <span>Request Sample Shipper</span>
             </button>
           </div>
 
@@ -224,21 +223,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
           <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#B9E3F9]/40 max-w-lg">
             <div>
               <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
-                30 <span className="text-xs font-mono font-medium text-[#14B8A6]">SECS</span>
+                0 <span className="text-xs font-mono font-medium text-[#14B8A6]">PREP</span>
               </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Pan Melt Time</div>
+              <div className="text-[11px] text-[#0F172A]/60 font-medium">Ready Straight to Pan</div>
             </div>
             <div>
               <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
                 -40°C
               </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Cold-Press Freeze</div>
+              <div className="text-[11px] text-[#0F172A]/60 font-medium">Instant Cold Lock</div>
             </div>
             <div>
               <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
                 100%
               </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Pure Ingredients</div>
+              <div className="text-[11px] text-[#0F172A]/60 font-medium">Usable Net Weight</div>
             </div>
           </div>
         </div>
@@ -262,7 +261,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
 
             {/* Inner Frost Spec Glass Tag */}
             <div className="absolute top-6 left-6 z-30 px-3.5 py-1.5 rounded-xl bg-white/90 backdrop-blur-md border border-[#B9E3F9]/60 shadow-sm flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#14B8A6] animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-[#14B8A6]" />
               <span className="text-[11px] font-mono font-bold tracking-wider text-[#0F172A]">
                 LEAFORA • READY-TO-MELT CUBES
               </span>
@@ -287,10 +286,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] font-mono font-semibold text-[#0F172A]/50 uppercase tracking-widest">
-                  Cellular Structure
+                  Flavor & Texture
                 </span>
                 <span className="text-xs font-bold text-[#0F172A]">
-                  Zero Cell Membrane Rupture
+                  Natural Crunch & Aroma Locked
                 </span>
               </div>
             </div>
