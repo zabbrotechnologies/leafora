@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Sparkles, ShieldCheck } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, ArrowUpRight, Sparkles, Snowflake } from 'lucide-react';
 
 interface NavbarProps {
   onRequestSample: () => void;
@@ -9,10 +10,11 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onRequestSample, onOpenCalculator }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 30);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -20,56 +22,36 @@ export const Navbar: React.FC<NavbarProps> = ({ onRequestSample, onOpenCalculato
   }, []);
 
   const navLinks = [
-    { label: 'Story', href: '#story' },
-    { label: 'Freezing Moment', href: '#freezing-moment' },
-    { label: 'The Range', href: '#products' },
-    { label: 'Why Frozen', href: '#why-frozen' },
-    { label: 'Process', href: '#process' },
-    { label: 'Kitchens', href: '#kitchens' },
-    { label: 'B2B Supply', href: '#b2b' },
+    { label: 'Home', path: '/' },
+    { label: 'Our Products', path: '/products' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Contact', path: '/contact' },
   ];
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
   };
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-400 ease-out ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ease-out ${
           isScrolled
-            ? 'py-3 bg-[#F8FBFC]/90 backdrop-blur-md border-b border-[#B9E3F9]/40 shadow-[0_10px_30px_rgba(15,23,42,0.04)]'
+            ? 'py-3 bg-[#F8FBFC]/90 backdrop-blur-md border-b border-[#B9E3F9]/50 shadow-[0_10px_30px_rgba(15,23,42,0.05)]'
             : 'py-5 bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between gap-4">
           {/* Brand Logo */}
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="group flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02] shrink-0"
           >
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#A8E6CF] via-[#14B8A6] to-[#0F172A] p-[1.5px] shadow-[0_0_15px_rgba(20,184,166,0.35)]">
               <div className="w-full h-full bg-[#F8FBFC] rounded-[10px] flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-[#14B8A6] group-hover:rotate-45 transition-transform duration-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07 19.07 4.93" />
-                </svg>
+                <Snowflake className="w-5 h-5 text-[#14B8A6] group-hover:rotate-45 transition-transform duration-500" />
               </div>
             </div>
             <div className="flex flex-col">
@@ -80,66 +62,61 @@ export const Navbar: React.FC<NavbarProps> = ({ onRequestSample, onOpenCalculato
                 LUXURY FROZEN CUISINE
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#F8FBFC]/75 backdrop-blur-md border border-[#B9E3F9]/60 rounded-full px-4 py-1.5 shadow-xs">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="text-xs font-semibold text-[#0F172A]/70 hover:text-[#0F172A] hover:bg-white px-3.5 py-1.5 rounded-full transition-all duration-200"
-              >
-                {link.label}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-1 bg-white/80 backdrop-blur-md border border-[#B9E3F9]/60 rounded-full px-3 py-1.5 shadow-xs">
+            {navLinks.map((link) => {
+              const active = isActive(link.path);
+              return (
+                <Link
+                  key={link.label}
+                  to={link.path}
+                  className={`text-xs font-bold px-4 py-1.5 rounded-full transition-all duration-200 ${
+                    active
+                      ? 'bg-[#0F172A] text-white shadow-xs'
+                      : 'text-[#0F172A]/70 hover:text-[#0F172A] hover:bg-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden md:flex items-center gap-3 shrink-0">
-            {/* Live Cold Status Pill */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50/80 border border-[#A8E6CF]/60 text-[#0F172A]">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#14B8A6] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#14B8A6]"></span>
-              </span>
-              <span className="text-[11px] font-mono font-bold text-[#0F172A]/85">
-                -40°C COLD-LOCKED
-              </span>
-            </div>
-
-            {/* Savings Calculator Trigger */}
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
+            {/* ROI Model Calculator */}
             <button
               onClick={onOpenCalculator}
-              className="text-xs font-semibold text-[#0F172A]/75 hover:text-[#14B8A6] px-3 py-2 rounded-full transition-colors flex items-center gap-1.5 hover:bg-white/60"
+              className="text-xs font-semibold text-[#0F172A]/75 hover:text-[#14B8A6] px-3 py-2 rounded-full transition-colors flex items-center gap-1.5 hover:bg-white/60 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#14B8A6]" />
               <span>ROI Model</span>
             </button>
 
-            {/* Primary CTA - Browse Wholesale and Retail Packs */}
+            {/* Primary Action Button */}
             <button
               onClick={onRequestSample}
-              className="group relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide overflow-hidden shadow-[0_4px_16px_rgba(15,23,42,0.18)] hover:shadow-[0_6px_24px_rgba(20,184,166,0.35)] transition-all duration-300 hover:scale-[1.02]"
+              className="group relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide overflow-hidden shadow-[0_4px_16px_rgba(15,23,42,0.18)] hover:shadow-[0_6px_24px_rgba(20,184,166,0.35)] transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
-              <span className="relative z-10">Browse Wholesale & Retail Packs</span>
+              <span className="relative z-10">Request Sample Shipper</span>
               <ArrowUpRight className="relative z-10 w-3.5 h-3.5 text-[#A8E6CF] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#14B8A6] to-[#0F172A] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </button>
           </div>
 
-          {/* Mobile Actions */}
+          {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={onRequestSample}
-              className="px-3.5 py-1.5 rounded-full bg-[#0F172A] text-white text-[11px] font-bold shadow-xs"
+              className="px-3.5 py-1.5 rounded-full bg-[#0F172A] text-white text-[11px] font-bold shadow-xs cursor-pointer"
             >
-              Browse Packs
+              Sample
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-white/90 border border-[#B9E3F9]/60 text-[#0F172A] shadow-xs"
+              className="p-2 rounded-xl bg-white/90 border border-[#B9E3F9]/60 text-[#0F172A] shadow-xs cursor-pointer"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -163,20 +140,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onRequestSample, onOpenCalculato
         >
           <div className="flex flex-col gap-4">
             <span className="text-[11px] font-bold tracking-widest text-[#14B8A6] uppercase">
-              NAVIGATION
+              PAGES
             </span>
             <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-lg font-heading font-semibold text-[#0F172A] hover:text-[#14B8A6] py-2 border-b border-[#B9E3F9]/30 flex items-center justify-between"
-                >
-                  <span>{link.label}</span>
-                  <ArrowUpRight className="w-4 h-4 text-[#0F172A]/40" />
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const active = isActive(link.path);
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`text-lg font-heading font-semibold py-2.5 px-3 rounded-xl border-b border-[#B9E3F9]/30 flex items-center justify-between ${
+                      active
+                        ? 'bg-[#0F172A] text-white'
+                        : 'text-[#0F172A] hover:text-[#14B8A6]'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    <ArrowUpRight className={`w-4 h-4 ${active ? 'text-[#A8E6CF]' : 'text-[#0F172A]/40'}`} />
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -186,25 +170,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onRequestSample, onOpenCalculato
                 setMobileMenuOpen(false);
                 onOpenCalculator();
               }}
-              className="w-full py-3 rounded-xl border border-[#14B8A6]/40 text-[#0F172A] text-xs font-semibold flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl border border-[#14B8A6]/40 text-[#0F172A] text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-[#14B8A6]" />
-              Calculate Kitchen Savings
+              <span>Kitchen ROI Calculator</span>
             </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onRequestSample();
               }}
-              className="w-full py-3.5 rounded-xl bg-[#0F172A] text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-lg"
+              className="w-full py-3.5 rounded-xl bg-[#0F172A] text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-lg cursor-pointer"
             >
-              <span>Order Free Sample Box</span>
+              <span>Request Sample Box</span>
               <ArrowUpRight className="w-4 h-4 text-[#A8E6CF]" />
             </button>
-            <div className="flex items-center justify-center gap-2 text-[10px] text-[#0F172A]/50 pt-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#14B8A6]" />
-              <span>HACCP & ISO 22000 Certified Cold-Chain</span>
-            </div>
           </div>
         </div>
       </div>

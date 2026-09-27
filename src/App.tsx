@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,17 +12,13 @@ import { IceParticlesCanvas } from './components/common/IceParticlesCanvas';
 import { LoadingScreen } from './components/common/LoadingScreen';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { ScrollToTop } from './components/common/ScrollToTop';
 
-import { HeroSection } from './components/sections/HeroSection';
-import { FreezingMomentSection } from './components/sections/FreezingMomentSection';
-import { ProductScrollDeckSection } from './components/sections/ProductScrollDeckSection';
-import { ProductShowcaseSection } from './components/sections/ProductShowcaseSection';
-import { WhyFrozenSection } from './components/sections/WhyFrozenSection';
-import { ProcessTimelineSection } from './components/sections/ProcessTimelineSection';
-import { KitchensSection } from './components/sections/KitchensSection';
-import { B2BSection } from './components/sections/B2BSection';
-import { BrandStorySection } from './components/sections/BrandStorySection';
-import { FinalCtaSection } from './components/sections/FinalCtaSection';
+import { HomePage } from './pages/HomePage';
+import { ProductsPage } from './pages/ProductsPage';
+import { ProductDetailPage } from './pages/ProductDetailPage';
+import { AboutPage } from './pages/AboutPage';
+import { ContactPage } from './pages/ContactPage';
 
 import { ProductDetailModal } from './components/modals/ProductDetailModal';
 import { SampleRequestModal } from './components/modals/SampleRequestModal';
@@ -41,7 +38,7 @@ export function App() {
       typeof window !== 'undefined' &&
       ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024);
 
-    // Initialize smooth scrolling with Lenis (desktop wheel smooth, native touch on mobile)
+    // Initialize smooth scrolling with Lenis
     const lenis = new Lenis({
       duration: isTouchDevice ? 0.8 : 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -50,7 +47,6 @@ export function App() {
       infinite: false,
     });
 
-    // Synchronize Lenis scroll with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
     const updateLenis = (time: number) => {
@@ -58,7 +54,6 @@ export function App() {
     };
 
     gsap.ticker.add(updateLenis);
-    // Use safe lag smoothing to prevent animation jumps
     gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
@@ -68,102 +63,106 @@ export function App() {
     };
   }, []);
 
-  const scrollToRange = () => {
-    const el = document.getElementById('products');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-[#F8FBFC] text-[#0F172A] selection:bg-[#14B8A6]/20 selection:text-[#0F172A]">
-      {/* 06: Loading Screen Experience */}
-      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+    <BrowserRouter>
+      <div className="relative min-h-screen bg-[#F8FBFC] text-[#0F172A] selection:bg-[#14B8A6]/20 selection:text-[#0F172A]">
+        {/* Reset window scroll to top on route change */}
+        <ScrollToTop />
 
-      {/* 05: Global Ambient Atmosphere */}
-      <CustomCursor />
-      <ScrollProgress />
-      <AmbientBackground />
-      <IceParticlesCanvas />
+        {/* Loading Screen Experience on Initial Mount */}
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
-      {/* 27: Frosted Glass Dynamic Navbar */}
-      <Navbar
-        onRequestSample={() => setIsSampleModalOpen(true)}
-        onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-      />
+        {/* Global Ambient Canvas Atmosphere */}
+        <CustomCursor />
+        <ScrollProgress />
+        <AmbientBackground />
+        <IceParticlesCanvas />
 
-      {/* Main Content Sections - Storytelling Chapters */}
-      <main className="relative z-20">
-        {/* Chapter 01: Hero & Cryogenic Phase Lock Introduction */}
-        <HeroSection
-          onRequestSample={() => setIsSampleModalOpen(true)}
-          onExploreRange={scrollToRange}
-        />
-
-        {/* Chapter 01.5: Freezing Moment (-40°C cryogenic instant lock) */}
-        <FreezingMomentSection />
-
-        {/* Chapter 02: ScrollTrigger Pinned Minimal Product Slide Deck (Right to Left Single-Card Transitions) */}
-        <ProductScrollDeckSection
-          onSelectProduct={(prod) => setSelectedProduct(prod)}
-          onRequestSample={() => setIsSampleModalOpen(true)}
-        />
-
-        {/* Chapter 02.5: Interactive Product Discovery & Full Specification Hub */}
-        <ProductShowcaseSection
-          onSelectProduct={(prod) => setSelectedProduct(prod)}
-          onRequestSample={() => setIsSampleModalOpen(true)}
-        />
-
-        {/* Chapter 03: Why Leafora (4 Interactive Value Pillars + Comparative Bio-Potency Matrix) */}
-        <WhyFrozenSection />
-
-        {/* Chapter 04: Process Story (6-Stage Pinned Harvest-to-Plate Cold Chain) */}
-        <ProcessTimelineSection />
-
-        {/* Chapter 05: Who We Serve (Multi-Segment Culinary Solutions & Sample Shippers) */}
-        <KitchensSection onRequestSample={() => setIsSampleModalOpen(true)} />
-
-        {/* Chapter 06: Commercial B2B Solutions & Yield Calculator */}
-        <B2BSection
+        {/* Dynamic Global Navbar */}
+        <Navbar
           onRequestSample={() => setIsSampleModalOpen(true)}
           onOpenCalculator={() => setIsCalculatorModalOpen(true)}
         />
 
-        {/* Chapter 07: Brand Story & Soil Stewardship */}
-        <BrandStorySection onRequestSample={() => setIsSampleModalOpen(true)} />
+        {/* Dynamic Multi-Page Routes */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                onSelectProduct={(prod) => setSelectedProduct(prod)}
+                onRequestSample={() => setIsSampleModalOpen(true)}
+                onOpenCalculator={() => setIsCalculatorModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <ProductsPage
+                onSelectProduct={(prod) => setSelectedProduct(prod)}
+                onRequestSample={() => setIsSampleModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <ProductDetailPage
+                onRequestSample={() => setIsSampleModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <AboutPage
+                onRequestSample={() => setIsSampleModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/contact"
+            element={<ContactPage />}
+          />
+          {/* Catch-all redirect to Home */}
+          <Route
+            path="*"
+            element={
+              <HomePage
+                onSelectProduct={(prod) => setSelectedProduct(prod)}
+                onRequestSample={() => setIsSampleModalOpen(true)}
+                onOpenCalculator={() => setIsCalculatorModalOpen(true)}
+              />
+            }
+          />
+        </Routes>
 
-        {/* Chapter 08: High-Converting Final Call to Action */}
-        <FinalCtaSection
+        {/* Global Footer & Live Cold-Chain Telemetry */}
+        <Footer
           onRequestSample={() => setIsSampleModalOpen(true)}
           onOpenCalculator={() => setIsCalculatorModalOpen(true)}
         />
-      </main>
 
-      {/* Footer & Live Cold-Chain Telemetry Ticker */}
-      <Footer
-        onRequestSample={() => setIsSampleModalOpen(true)}
-        onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-      />
+        {/* Global Interactive Modals */}
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onRequestSample={() => setIsSampleModalOpen(true)}
+        />
 
-      {/* Interactive Modals */}
-      <ProductDetailModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        onRequestSample={() => setIsSampleModalOpen(true)}
-      />
+        <SampleRequestModal
+          isOpen={isSampleModalOpen}
+          onClose={() => setIsSampleModalOpen(false)}
+        />
 
-      <SampleRequestModal
-        isOpen={isSampleModalOpen}
-        onClose={() => setIsSampleModalOpen(false)}
-      />
-
-      <ColdChainCalculatorModal
-        isOpen={isCalculatorModalOpen}
-        onClose={() => setIsCalculatorModalOpen(false)}
-        onRequestSample={() => setIsSampleModalOpen(true)}
-      />
-    </div>
+        <ColdChainCalculatorModal
+          isOpen={isCalculatorModalOpen}
+          onClose={() => setIsCalculatorModalOpen(false)}
+          onRequestSample={() => setIsSampleModalOpen(true)}
+        />
+      </div>
+    </BrowserRouter>
   );
 }
 
