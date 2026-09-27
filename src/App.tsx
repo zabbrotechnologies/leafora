@@ -14,6 +14,7 @@ import { Footer } from './components/common/Footer';
 
 import { HeroSection } from './components/sections/HeroSection';
 import { FreezingMomentSection } from './components/sections/FreezingMomentSection';
+import { ProductScrollDeckSection } from './components/sections/ProductScrollDeckSection';
 import { ProductShowcaseSection } from './components/sections/ProductShowcaseSection';
 import { WhyFrozenSection } from './components/sections/WhyFrozenSection';
 import { ProcessTimelineSection } from './components/sections/ProcessTimelineSection';
@@ -102,7 +103,13 @@ export function App() {
         {/* Chapter 01.5: Freezing Moment (-40°C cryogenic instant lock) */}
         <FreezingMomentSection />
 
-        {/* Chapter 02: Dynamic Product Discovery (Dominant Featured Hero + Selector Rail) */}
+        {/* Chapter 02: ScrollTrigger Pinned Minimal Product Slide Deck (Right to Left Single-Card Transitions) */}
+        <ProductScrollDeckSection
+          onSelectProduct={(prod) => setSelectedProduct(prod)}
+          onRequestSample={() => setIsSampleModalOpen(true)}
+        />
+
+        {/* Chapter 02.5: Interactive Product Discovery & Full Specification Hub */}
         <ProductShowcaseSection
           onSelectProduct={(prod) => setSelectedProduct(prod)}
           onRequestSample={() => setIsSampleModalOpen(true)}
