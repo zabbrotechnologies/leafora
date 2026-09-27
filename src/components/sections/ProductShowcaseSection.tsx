@@ -31,42 +31,62 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
     const track = trackRef.current;
     if (!container || !track) return;
 
-    const ctx = gsap.context(() => {
-      // Calculate total horizontal scroll width
-      const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 140);
+    const mm = gsap.matchMedia();
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: () => `+=${track.scrollWidth - window.innerWidth + 400}`,
-          pin: true,
-          scrub: 0.9,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, container);
+    mm.add(
+      {
+        isDesktop: '(min-width: 1024px)',
+        isMobile: '(max-width: 1023px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
 
-    return () => ctx.revert();
+        if (isDesktop) {
+          // Calculate total horizontal scroll width on desktop
+          const getScrollAmount = () => -(track.scrollWidth - window.innerWidth + 140);
+
+          gsap.to(track, {
+            x: getScrollAmount,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top top',
+              end: () => `+=${track.scrollWidth - window.innerWidth + 400}`,
+              pin: true,
+              scrub: 0.9,
+              invalidateOnRefresh: true,
+            },
+          });
+        }
+      }
+    );
+
+    return () => mm.revert();
   }, [selectedCategory]);
 
   const scrollTrack = (direction: 'left' | 'right') => {
     if (!trackRef.current) return;
-    const offset = direction === 'left' ? -380 : 380;
-    gsap.to(trackRef.current, {
-      x: `+=${-offset}`,
-      duration: 0.5,
-      ease: 'power2.out',
-    });
+    const offset = direction === 'left' ? -340 : 340;
+    
+    if (window.innerWidth < 1024) {
+      const parent = trackRef.current.parentElement;
+      if (parent) {
+        parent.scrollBy({ left: offset, behavior: 'smooth' });
+      }
+    } else {
+      gsap.to(trackRef.current, {
+        x: `+=${-offset}`,
+        duration: 0.5,
+        ease: 'power2.out',
+      });
+    }
   };
 
   return (
     <section
       ref={containerRef}
       id="products"
-      className="relative w-full h-screen bg-[#F8FBFC] flex flex-col justify-between pt-28 pb-10 overflow-hidden border-t border-[#B9E3F9]/40"
+      className="relative w-full min-h-screen lg:h-screen bg-[#F8FBFC] flex flex-col justify-between pt-24 md:pt-28 pb-8 md:pb-10 overflow-hidden border-t border-[#B9E3F9]/40"
     >
       {/* Top Header Bar */}
       <div className="max-w-7xl mx-auto w-full px-6 md:px-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
@@ -118,10 +138,10 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
         </div>
 
       {/* Horizontal Scrolling Track */}
-      <div className="w-full my-auto overflow-visible z-20">
+      <div className="w-full my-auto overflow-x-auto lg:overflow-visible no-scrollbar z-20 scroll-smooth">
         <div
           ref={trackRef}
-          className="flex gap-8 px-6 md:px-16 w-max items-center py-4"
+          className="flex gap-4 sm:gap-8 px-4 sm:px-6 md:px-16 w-max items-center py-4"
         >
           {filteredProducts.map((product) => (
             <div
@@ -129,7 +149,7 @@ export const ProductShowcaseSection: React.FC<ProductShowcaseProps> = ({
               data-cursor-type="product"
               data-cursor-label="INSPECT"
               onClick={() => onSelectProduct(product)}
-              className="group relative w-[310px] sm:w-[360px] md:w-[410px] shrink-0 glass-panel rounded-3xl p-6 transition-all duration-400 hover:-translate-y-2 hover:shadow-2xl cursor-pointer flex flex-col justify-between"
+              className="group relative w-[285px] xs:w-[320px] sm:w-[360px] md:w-[410px] shrink-0 glass-panel rounded-3xl p-5 sm:p-6 transition-all duration-400 hover:-translate-y-2 hover:shadow-2xl cursor-pointer flex flex-col justify-between"
             >
               {/* Top Meta Bar */}
               <div className="flex items-center justify-between gap-2 mb-4">

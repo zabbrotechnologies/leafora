@@ -129,81 +129,91 @@ export const FloatingIngredients: React.FC<FloatingIngredientsProps> = ({ scene 
     const container = containerRef.current;
     if (!container) return;
 
-    const ctx = gsap.context(() => {
-      // Foreground parallax (Speed: 1.0)
-      if (fgRef.current) {
-        gsap.to(fgRef.current, {
-          y: -140,
-          rotate: 35,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: container,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2,
-          },
-        });
-      }
+    const mm = gsap.matchMedia();
 
-      // Midground parallax (Speed: 0.6)
-      if (mgRef.current) {
-        gsap.to(mgRef.current, {
-          y: -80,
-          rotate: -25,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: container,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-        });
-      }
+    mm.add(
+      {
+        isDesktop: '(min-width: 768px)',
+        isMobile: '(max-width: 767px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
+        const fgY = isDesktop ? -140 : -30;
+        const mgY = isDesktop ? -80 : -20;
+        const bgY = isDesktop ? -40 : -10;
 
-      // Background parallax (Speed: 0.25)
-      if (bgRef.current) {
-        gsap.to(bgRef.current, {
-          y: -40,
-          rotate: 20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: container,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.4,
-          },
-        });
-      }
-    }, container);
+        if (fgRef.current) {
+          gsap.to(fgRef.current, {
+            y: fgY,
+            rotate: isDesktop ? 35 : 15,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: isDesktop ? 1.2 : 0.6,
+            },
+          });
+        }
 
-    return () => ctx.revert();
+        if (mgRef.current) {
+          gsap.to(mgRef.current, {
+            y: mgY,
+            rotate: isDesktop ? -25 : -10,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: isDesktop ? 0.8 : 0.4,
+            },
+          });
+        }
+
+        if (bgRef.current) {
+          gsap.to(bgRef.current, {
+            y: bgY,
+            rotate: isDesktop ? 20 : 8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: isDesktop ? 0.4 : 0.2,
+            },
+          });
+        }
+      }
+    );
+
+    return () => mm.revert();
   }, []);
 
   if (scene === 'hero') {
     return (
       <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden z-15">
-        {/* Primary Foreground Snowflake (Replaces -40°C bubble at top-right) */}
+        {/* Primary Foreground Snowflake - positioned in corner on mobile so it never collides with text */}
         <div
           ref={fgRef}
-          className="absolute top-[18%] right-[8%] opacity-85 transition-transform duration-700"
+          className="absolute top-[8%] right-[4%] md:top-[18%] md:right-[8%] opacity-70 md:opacity-85 transition-transform duration-700 pointer-events-none"
         >
-          <CrystalSnowflake size={52} glowColor="rgba(20, 184, 166, 0.45)" />
+          <CrystalSnowflake size={40} glowColor="rgba(20, 184, 166, 0.45)" className="md:w-[52px] md:h-[52px]" />
         </div>
 
-        {/* Midground Stellar Snowflake (Replaces squircle at mid-left) */}
+        {/* Midground Stellar Snowflake */}
         <div
           ref={mgRef}
-          className="absolute top-[64%] left-[3%] opacity-75 transition-transform duration-700"
+          className="absolute top-[72%] left-[2%] md:top-[64%] md:left-[3%] opacity-60 md:opacity-75 transition-transform duration-700 pointer-events-none hidden xs:block"
         >
-          <StellarSnowflake size={38} glowColor="rgba(168, 230, 207, 0.4)" />
+          <StellarSnowflake size={30} glowColor="rgba(168, 230, 207, 0.4)" className="md:w-[38px] md:h-[38px]" />
         </div>
 
-        {/* Background Micro Crystal (Replaces rotated squircle at mid-right) */}
+        {/* Background Micro Crystal */}
         <div
           ref={bgRef}
-          className="absolute top-[62%] right-[22%] opacity-60 transition-transform duration-700"
+          className="absolute top-[68%] right-[10%] md:top-[62%] md:right-[22%] opacity-50 md:opacity-60 transition-transform duration-700 pointer-events-none hidden sm:block"
         >
-          <MicroCrystalFlake size={26} />
+          <MicroCrystalFlake size={22} className="md:w-[26px] md:h-[26px]" />
         </div>
       </div>
     );
@@ -215,17 +225,17 @@ export const FloatingIngredients: React.FC<FloatingIngredientsProps> = ({ scene 
         {/* Crystalline Dendrite Snowflake at mid-left */}
         <div
           ref={fgRef}
-          className="absolute top-[32%] left-[4%] opacity-80 transition-transform duration-700"
+          className="absolute top-[28%] left-[2%] md:top-[32%] md:left-[4%] opacity-70 md:opacity-80 transition-transform duration-700 pointer-events-none hidden sm:block"
         >
-          <CrystalSnowflake size={52} glowColor="rgba(185, 227, 249, 0.5)" />
+          <CrystalSnowflake size={40} glowColor="rgba(185, 227, 249, 0.5)" className="md:w-[52px] md:h-[52px]" />
         </div>
 
         {/* Crystalline Stellar Snowflake at bottom-right */}
         <div
           ref={mgRef}
-          className="absolute bottom-[24%] right-[7%] opacity-75 transition-transform duration-700"
+          className="absolute bottom-[18%] right-[3%] md:bottom-[24%] md:right-[7%] opacity-65 md:opacity-75 transition-transform duration-700 pointer-events-none hidden xs:block"
         >
-          <StellarSnowflake size={42} glowColor="rgba(20, 184, 166, 0.45)" />
+          <StellarSnowflake size={34} glowColor="rgba(20, 184, 166, 0.45)" className="md:w-[42px] md:h-[42px]" />
         </div>
       </div>
     );

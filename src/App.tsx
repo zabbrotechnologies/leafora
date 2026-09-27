@@ -37,12 +37,18 @@ export function App() {
   const [isCalculatorModalOpen, setIsCalculatorModalOpen] = useState(false);
 
   useEffect(() => {
-    // Initialize smooth scrolling with Lenis
+    // Detect mobile touch device
+    const isTouchDevice =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024);
+
+    // Initialize smooth scrolling with Lenis (desktop wheel smooth, native touch on mobile)
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: isTouchDevice ? 0.8 : 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 1.5,
+      smoothWheel: !isTouchDevice,
+      touchMultiplier: isTouchDevice ? 1 : 1.2,
+      infinite: false,
     });
 
     // Synchronize Lenis scroll with GSAP ScrollTrigger
@@ -53,7 +59,8 @@ export function App() {
     };
 
     gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+    // Use safe lag smoothing to prevent animation jumps
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       lenis.destroy();

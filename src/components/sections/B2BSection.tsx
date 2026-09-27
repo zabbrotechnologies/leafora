@@ -19,27 +19,36 @@ export const B2BSection: React.FC<B2BSectionProps> = ({ onRequestSample, onOpenC
     const container = containerRef.current;
     if (!container) return;
 
-    const ctx = gsap.context(() => {
-      // Big background typography parallax slide
-      if (bigTextRef.current) {
-        gsap.fromTo(
-          bigTextRef.current,
-          { x: -100 },
-          {
-            x: 100,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: container,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.8,
-            },
-          }
-        );
-      }
-    }, container);
+    const mm = gsap.matchMedia();
 
-    return () => ctx.revert();
+    mm.add(
+      {
+        isDesktop: '(min-width: 768px)',
+        isMobile: '(max-width: 767px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
+
+        if (bigTextRef.current) {
+          gsap.fromTo(
+            bigTextRef.current,
+            { x: isDesktop ? -100 : -30 },
+            {
+              x: isDesktop ? 100 : 30,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: container,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: isDesktop ? 0.8 : 0.4,
+              },
+            }
+          );
+        }
+      }
+    );
+
+    return () => mm.revert();
   }, []);
 
   const getIcon = (name: string) => {
@@ -61,7 +70,7 @@ export const B2BSection: React.FC<B2BSectionProps> = ({ onRequestSample, onOpenC
     <section
       ref={containerRef}
       id="b2b"
-      className="relative w-full py-28 sm:py-36 bg-[#0F172A] text-white overflow-hidden"
+      className="relative w-full py-24 sm:py-36 bg-[#0F172A] text-white overflow-hidden"
     >
       {/* Background Oversized Sliding Typography */}
       <div
@@ -71,7 +80,7 @@ export const B2BSection: React.FC<B2BSectionProps> = ({ onRequestSample, onOpenC
         BUILT FOR BUSY KITCHENS • ZERO WASTE • -40°C LOGISTICS
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">

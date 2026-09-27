@@ -30,12 +30,13 @@ export const CryoSnowfallCanvas: React.FC = () => {
     const parent = canvas.parentElement;
     if (!parent) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let width = (canvas.width = parent.clientWidth);
     let height = (canvas.height = parent.clientHeight);
     let animationId: number;
+    const isMobile = window.innerWidth < 768;
 
     const handleResize = () => {
       if (!canvas || !parent) return;
@@ -65,31 +66,33 @@ export const CryoSnowfallCanvas: React.FC = () => {
       mouseRef.current.active = false;
     };
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    parent.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('resize', handleResize, { passive: true });
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
+      parent.addEventListener('mouseleave', handleMouseLeave);
+    }
 
-    // Initialize snow particles
-    const particleCount = Math.min(85, Math.floor(width / 14));
+    // Initialize snow particles (optimized count)
+    const particleCount = isMobile ? 25 : Math.min(60, Math.floor(width / 22));
     const particles: SnowflakeParticle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const baseVy = Math.random() * 1.2 + 0.5;
+      const baseVy = Math.random() * 1.1 + 0.5;
       const randType = Math.random();
       const type: SnowflakeParticle['type'] =
-        randType > 0.6 ? 'crystal' : randType > 0.25 ? 'flake' : 'glow';
+        randType > 0.6 ? 'crystal' : randType > 0.3 ? 'flake' : 'glow';
 
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
         baseVy,
-        vx: (Math.random() - 0.5) * 0.4,
+        vx: (Math.random() - 0.5) * 0.3,
         vy: baseVy,
-        size: type === 'crystal' ? Math.random() * 3.5 + 2.5 : Math.random() * 2 + 1,
-        opacity: Math.random() * 0.55 + 0.35,
+        size: type === 'crystal' ? Math.random() * 3 + 2 : Math.random() * 1.8 + 1,
+        opacity: Math.random() * 0.5 + 0.35,
         swayAngle: Math.random() * Math.PI * 2,
         swaySpeed: Math.random() * 0.02 + 0.01,
-        swayAmp: Math.random() * 0.6 + 0.2,
+        swayAmp: Math.random() * 0.5 + 0.2,
         rotation: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.02,
         type,
@@ -119,7 +122,6 @@ export const CryoSnowfallCanvas: React.FC = () => {
           c.moveTo(0, 0);
           c.lineTo(x2, y2);
 
-          // Small branchlets
           const midX = x2 * 0.6;
           const midY = y2 * 0.6;
           const bAngle1 = angle + Math.PI / 4;
@@ -133,29 +135,23 @@ export const CryoSnowfallCanvas: React.FC = () => {
         }
         c.stroke();
 
-        // Center frost glow
         c.beginPath();
         c.arc(0, 0, p.size * 0.25, 0, Math.PI * 2);
         c.fill();
       } else if (p.type === 'flake') {
-        // Soft glowing snow particle
-        const grad = c.createRadialGradient(0, 0, 0, 0, 0, p.size);
-        grad.addColorStop(0, `rgba(255, 255, 255, ${p.opacity})`);
-        grad.addColorStop(0.5, `rgba(185, 227, 249, ${p.opacity * 0.7})`);
-        grad.addColorStop(1, 'rgba(20, 184, 166, 0)');
-
-        c.fillStyle = grad;
+        // Soft glowing snow particle (direct fill style, no runtime gradient creation)
+        c.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
         c.beginPath();
-        c.arc(0, 0, p.size * 1.5, 0, Math.PI * 2);
+        c.arc(0, 0, p.size * 0.8, 0, Math.PI * 2);
         c.fill();
       } else {
         // Crisp diamond micro-crystal
-        c.fillStyle = `rgba(248, 251, 252, ${p.opacity})`;
+        c.fillStyle = `rgba(185, 227, 249, ${p.opacity})`;
         c.beginPath();
-        c.moveTo(0, -p.size * 1.2);
-        c.lineTo(p.size * 0.7, 0);
-        c.lineTo(0, p.size * 1.2);
-        c.lineTo(-p.size * 0.7, 0);
+        c.moveTo(0, -p.size * 1.1);
+        c.lineTo(p.size * 0.65, 0);
+        c.lineTo(0, p.size * 1.1);
+        c.lineTo(-p.size * 0.65, 0);
         c.closePath();
         c.fill();
       }
@@ -171,44 +167,39 @@ export const CryoSnowfallCanvas: React.FC = () => {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Hover repulsion & wind dynamic
-        if (mouse.active) {
+        // Hover repulsion on desktop
+        if (!isMobile && mouse.active) {
           const dx = p.x - mouse.x;
           const dy = p.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 170;
+          const maxDist = 150;
 
           if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 2.2;
+            const force = (1 - dist / maxDist) * 2;
             const angle = Math.atan2(dy, dx);
-            // Push away + slight swirling upward lift
             p.vx += Math.cos(angle) * force;
-            p.vy += Math.sin(angle) * force - 0.4 * force;
+            p.vy += Math.sin(angle) * force - 0.3 * force;
           }
         }
 
-        // Apply natural sway
         p.swayAngle += p.swaySpeed;
         const swayForce = Math.sin(p.swayAngle) * p.swayAmp;
 
-        // Position update
         p.x += p.vx + swayForce;
         p.y += p.vy;
         p.rotation += p.rotSpeed;
 
-        // Dampen velocity back to natural fall
         p.vx *= 0.94;
         p.vy = p.vy * 0.94 + p.baseVy * 0.06;
 
-        // Wrap around bounds
-        if (p.y > height + 20) {
-          p.y = -20;
+        if (p.y > height + 15) {
+          p.y = -15;
           p.x = Math.random() * width;
           p.vy = p.baseVy;
-          p.vx = (Math.random() - 0.5) * 0.4;
+          p.vx = (Math.random() - 0.5) * 0.3;
         }
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
+        if (p.x < -15) p.x = width + 15;
+        if (p.x > width + 15) p.x = -15;
 
         drawSnowflake(ctx, p);
       }
@@ -220,8 +211,10 @@ export const CryoSnowfallCanvas: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      parent.removeEventListener('mouseleave', handleMouseLeave);
+      if (!isMobile) {
+        window.removeEventListener('mousemove', handleMouseMove);
+        parent.removeEventListener('mouseleave', handleMouseLeave);
+      }
       cancelAnimationFrame(animationId);
     };
   }, []);

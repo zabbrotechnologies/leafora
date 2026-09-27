@@ -24,12 +24,13 @@ export const IceParticlesCanvas: React.FC = () => {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
     let animationFrameId: number;
+    const isMobile = window.innerWidth < 768;
 
     const handleResize = () => {
       if (!canvas) return;
@@ -42,24 +43,26 @@ export const IceParticlesCanvas: React.FC = () => {
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    }
 
-    // Generate subtle crystalline particles
-    const particleCount = Math.min(45, Math.floor(window.innerWidth / 30));
+    // Generate subtle crystalline particles (lightweight on mobile)
+    const particleCount = isMobile ? 18 : Math.min(36, Math.floor(window.innerWidth / 40));
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 2.2 + 0.8,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: Math.random() * 0.35 + 0.15, // Gentle downward drift
-        alpha: Math.random() * 0.45 + 0.15,
-        alphaSpeed: (Math.random() * 0.008 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
+        radius: Math.random() * 2 + 0.8,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: Math.random() * 0.3 + 0.12,
+        alpha: Math.random() * 0.4 + 0.15,
+        alphaSpeed: (Math.random() * 0.006 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
         rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.015,
-        sides: Math.random() > 0.7 ? 6 : 4, // Hexagonal or diamond crystal shapes
+        rotationSpeed: (Math.random() - 0.5) * 0.012,
+        sides: Math.random() > 0.7 ? 6 : 4,
       });
     }
 
@@ -88,21 +91,15 @@ export const IceParticlesCanvas: React.FC = () => {
         }
         c.closePath();
       } else {
-        // Diamond / 4-point crystal
-        c.moveTo(0, -r * 1.3);
-        c.lineTo(r * 0.8, 0);
-        c.lineTo(0, r * 1.3);
-        c.lineTo(-r * 0.8, 0);
+        // Diamond crystal
+        c.moveTo(0, -r * 1.2);
+        c.lineTo(r * 0.7, 0);
+        c.lineTo(0, r * 1.2);
+        c.lineTo(-r * 0.7, 0);
         c.closePath();
       }
 
-      // Ice glint gradient
-      const grad = c.createRadialGradient(0, 0, 0, 0, 0, r * 1.5);
-      grad.addColorStop(0, `rgba(248, 251, 252, ${alpha * 1.2})`);
-      grad.addColorStop(0.5, `rgba(185, 227, 249, ${alpha})`);
-      grad.addColorStop(1, `rgba(20, 184, 166, 0)`);
-
-      c.fillStyle = grad;
+      c.fillStyle = `rgba(185, 227, 249, ${alpha})`;
       c.fill();
       c.restore();
     };
@@ -113,14 +110,16 @@ export const IceParticlesCanvas: React.FC = () => {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Slight pointer repulsion
-        const dx = mouseRef.current.x - p.x;
-        const dy = mouseRef.current.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 140) {
-          const angle = Math.atan2(dy, dx);
-          p.x -= Math.cos(angle) * 0.6;
-          p.y -= Math.sin(angle) * 0.6;
+        // Slight pointer repulsion on desktop
+        if (!isMobile) {
+          const dx = mouseRef.current.x - p.x;
+          const dy = mouseRef.current.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120 && dist > 0) {
+            const angle = Math.atan2(dy, dx);
+            p.x -= Math.cos(angle) * 0.5;
+            p.y -= Math.sin(angle) * 0.5;
+          }
         }
 
         p.x += p.vx;
@@ -128,17 +127,17 @@ export const IceParticlesCanvas: React.FC = () => {
         p.rotation += p.rotationSpeed;
         p.alpha += p.alphaSpeed;
 
-        if (p.alpha > 0.65 || p.alpha < 0.1) {
+        if (p.alpha > 0.6 || p.alpha < 0.1) {
           p.alphaSpeed = -p.alphaSpeed;
         }
 
         // Wrap around bounds
-        if (p.y > height + 20) {
-          p.y = -20;
+        if (p.y > height + 15) {
+          p.y = -15;
           p.x = Math.random() * width;
         }
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
+        if (p.x < -15) p.x = width + 15;
+        if (p.x > width + 15) p.x = -15;
 
         drawCrystal(ctx, p.x, p.y, p.radius, p.rotation, p.sides, p.alpha);
       }
@@ -150,7 +149,9 @@ export const IceParticlesCanvas: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      if (!isMobile) {
+        window.removeEventListener('mousemove', handleMouseMove);
+      }
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

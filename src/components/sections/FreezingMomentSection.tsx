@@ -19,48 +19,58 @@ export const FreezingMomentSection: React.FC = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const ctx = gsap.context(() => {
-      // ScrollTrigger for freezing transformation
-      ScrollTrigger.create({
-        trigger: container,
-        start: 'top top',
-        end: '+=200%',
-        pin: true,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          if (isManualOverride) return;
-          const progress = self.progress;
-          setFreezeProgress(progress);
+    const mm = gsap.matchMedia();
 
-          // Animate temperature from +18.4 down to -40.0
-          const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
-          if (tempNumberRef.current) {
-            tempNumberRef.current.innerText = `${currentTemp}°C`;
-          }
+    mm.add(
+      {
+        isDesktop: '(min-width: 1024px)',
+        isMobile: '(max-width: 1023px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
 
-          // Frost opacity and blur
-          if (frostLensRef.current) {
-            gsap.set(frostLensRef.current, {
-              opacity: progress * 0.95,
-              backdropFilter: `blur(${progress * 14}px)`,
-              webkitBackdropFilter: `blur(${progress * 14}px)`,
-            });
-          }
+        // ScrollTrigger for freezing transformation
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top top',
+          end: isDesktop ? '+=200%' : '+=140%',
+          pin: true,
+          scrub: 0.6,
+          onUpdate: (self) => {
+            if (isManualOverride) return;
+            const progress = self.progress;
+            setFreezeProgress(progress);
 
-          // Headline reveal when progress > 0.4
-          if (headlineRef.current) {
-            const headlineOpacity = Math.max(0, (progress - 0.35) / 0.65);
-            gsap.set(headlineRef.current, {
-              opacity: headlineOpacity,
-              y: (1 - headlineOpacity) * 35,
-              scale: 0.95 + headlineOpacity * 0.05,
-            });
-          }
-        },
-      });
-    }, container);
+            // Animate temperature from +18.4 down to -40.0
+            const currentTemp = (+18.4 - progress * (18.4 + 40.0)).toFixed(1);
+            if (tempNumberRef.current) {
+              tempNumberRef.current.innerText = `${currentTemp}°C`;
+            }
 
-    return () => ctx.revert();
+            // Frost opacity and blur
+            if (frostLensRef.current) {
+              gsap.set(frostLensRef.current, {
+                opacity: progress * 0.95,
+                backdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
+                webkitBackdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
+              });
+            }
+
+            // Headline reveal when progress > 0.4
+            if (headlineRef.current) {
+              const headlineOpacity = Math.max(0, (progress - 0.35) / 0.65);
+              gsap.set(headlineRef.current, {
+                opacity: headlineOpacity,
+                y: (1 - headlineOpacity) * (isDesktop ? 35 : 15),
+                scale: 0.95 + headlineOpacity * 0.05,
+              });
+            }
+          },
+        });
+      }
+    );
+
+    return () => mm.revert();
   }, [isManualOverride]);
 
   const handleManualSlider = (val: number) => {
@@ -71,7 +81,7 @@ export const FreezingMomentSection: React.FC = () => {
       tempNumberRef.current.innerText = `${currentTemp}°C`;
     }
     if (frostLensRef.current) {
-      frostLensRef.current.style.backdropFilter = `blur(${val * 14}px)`;
+      frostLensRef.current.style.backdropFilter = `blur(${val * 12}px)`;
       gsap.set(frostLensRef.current, {
         opacity: val * 0.95,
       });
@@ -80,7 +90,7 @@ export const FreezingMomentSection: React.FC = () => {
       const headlineOpacity = Math.max(0, (val - 0.35) / 0.65);
       gsap.set(headlineRef.current, {
         opacity: headlineOpacity,
-        y: (1 - headlineOpacity) * 35,
+        y: (1 - headlineOpacity) * 20,
         scale: 0.95 + headlineOpacity * 0.05,
       });
     }
@@ -90,7 +100,7 @@ export const FreezingMomentSection: React.FC = () => {
     <section
       ref={containerRef}
       id="freezing-moment"
-      className="relative w-full h-screen bg-[#0F172A] text-white flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 md:px-14 overflow-hidden"
+      className="relative w-full min-h-screen md:h-screen bg-[#0F172A] text-white flex flex-col justify-between pt-24 md:pt-28 pb-6 md:pb-10 px-4 sm:px-10 md:px-14 overflow-hidden"
     >
       {/* Interactive Hover-Responsive Snowfall Canvas */}
       <CryoSnowfallCanvas />
@@ -102,29 +112,29 @@ export const FreezingMomentSection: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] rounded-full bg-radial from-[#14B8A6]/20 via-[#B9E3F9]/10 to-transparent blur-3xl pointer-events-none" />
 
       {/* Top Header & Telemetry */}
-      <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-20">
-        <div className="flex items-center gap-3.5">
-          <div className="w-2 h-2 rounded-full bg-[#14B8A6] shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
+      <div className="max-w-7xl mx-auto w-full flex flex-row items-center justify-between gap-3 z-20">
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
+          <div className="w-2 h-2 rounded-full bg-[#14B8A6] shadow-[0_0_10px_rgba(20,184,166,0.8)] shrink-0" />
           <div>
-            <span className="text-xs font-semibold tracking-widest text-[#A8E6CF] uppercase block">
+            <span className="text-[10px] sm:text-xs font-semibold tracking-widest text-[#A8E6CF] uppercase block">
               Signature Cryogenic Moment
             </span>
-            <h2 className="text-xl sm:text-2xl font-heading font-bold text-white tracking-tight">
+            <h2 className="text-base sm:text-2xl font-heading font-bold text-white tracking-tight">
               The -40°C Instant Phase Lock
             </h2>
           </div>
         </div>
 
         {/* Real-time Temperature Gauge */}
-        <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md">
-          <ThermometerSnowflake className="w-5 h-5 text-[#A8E6CF]" />
+        <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md shrink-0">
+          <ThermometerSnowflake className="w-4 h-4 sm:w-5 sm:h-5 text-[#A8E6CF]" />
           <div className="flex flex-col">
-            <span className="text-[10px] font-mono tracking-widest text-white/50 uppercase">
-              CORE TEMPERATURE
+            <span className="text-[8px] sm:text-[10px] font-mono tracking-widest text-white/50 uppercase">
+              CORE TEMP
             </span>
             <span
               ref={tempNumberRef}
-              className="text-lg sm:text-xl font-mono font-bold text-[#A8E6CF]"
+              className="text-sm sm:text-xl font-mono font-bold text-[#A8E6CF]"
             >
               +18.4°C
             </span>
@@ -196,10 +206,10 @@ export const FreezingMomentSection: React.FC = () => {
       </div>
 
       {/* Bottom Interactive Dial & Status */}
-      <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-4 z-20 pt-4 border-t border-white/10">
-        <div className="flex items-center gap-3 text-xs text-white/70">
-          <CheckCircle2 className="w-4 h-4 text-[#14B8A6]" />
-          <span>Scroll to freeze, or test manually:</span>
+      <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-3 z-20 pt-3 border-t border-white/10">
+        <div className="flex items-center gap-2.5 text-xs text-white/70">
+          <CheckCircle2 className="w-4 h-4 text-[#14B8A6] shrink-0" />
+          <span className="text-[11px] sm:text-xs">Scroll or drag to freeze:</span>
           <input
             type="range"
             min="0"
@@ -207,7 +217,7 @@ export const FreezingMomentSection: React.FC = () => {
             step="0.01"
             value={freezeProgress}
             onChange={(e) => handleManualSlider(parseFloat(e.target.value))}
-            className="w-24 accent-[#14B8A6] cursor-pointer"
+            className="w-20 sm:w-24 accent-[#14B8A6] cursor-pointer"
             aria-label="Cryogenic freeze slider"
           />
           {isManualOverride && (
@@ -223,9 +233,9 @@ export const FreezingMomentSection: React.FC = () => {
         </div>
 
         {/* Phase State Indicators */}
-        <div className="flex items-center gap-6 text-xs font-mono">
+        <div className="flex items-center gap-2 sm:gap-6 text-[10px] sm:text-xs font-mono">
           <span className={freezeProgress < 0.3 ? 'text-[#14B8A6] font-bold' : 'text-white/40'}>
-            01 AMBIENT (+18°C)
+            01 AMBIENT
           </span>
           <span className="text-white/20">→</span>
           <span
@@ -233,7 +243,7 @@ export const FreezingMomentSection: React.FC = () => {
               freezeProgress >= 0.3 && freezeProgress < 0.7 ? 'text-[#14B8A6] font-bold' : 'text-white/40'
             }
           >
-            02 FLUIDIZED BLAST
+            02 BLAST
           </span>
           <span className="text-white/20">→</span>
           <span className={freezeProgress >= 0.7 ? 'text-[#A8E6CF] font-bold' : 'text-white/40'}>

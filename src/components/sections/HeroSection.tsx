@@ -42,97 +42,106 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
   };
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Intro timeline
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    const mm = gsap.matchMedia();
 
-      // Phase 1: Ambient glow
-      tl.fromTo(
-        ambientGlowRef.current,
-        { opacity: 0, scale: 0.85 },
-        { opacity: 1, scale: 1, duration: 1.2 }
-      );
+    mm.add(
+      {
+        isDesktop: '(min-width: 1024px)',
+        isMobile: '(max-width: 1023px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
 
-      // Phase 2: Product enters from slight depth (1.08 -> 1, blur -> sharp)
-      tl.fromTo(
-        heroImageRef.current,
-        { scale: 1.08, opacity: 0, filter: 'blur(8px)', y: 30 },
-        { scale: 1, opacity: 1, filter: 'blur(0px)', y: 0, duration: 1.3 },
-        '-=0.8'
-      );
+        // Intro timeline
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Phase 3: Headlines staggered
-      tl.fromTo(
-        headlinePart1Ref.current,
-        { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
-        { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
-        '-=0.9'
-      );
+        // Phase 1: Ambient glow
+        tl.fromTo(
+          ambientGlowRef.current,
+          { opacity: 0, scale: 0.85 },
+          { opacity: 1, scale: 1, duration: 1.2 }
+        );
 
-      tl.fromTo(
-        headlinePart2Ref.current,
-        { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
-        { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
-        '-=0.7'
-      );
+        // Phase 2: Product enters from slight depth
+        tl.fromTo(
+          heroImageRef.current,
+          { scale: 1.08, opacity: 0, filter: 'blur(8px)', y: 30 },
+          { scale: 1, opacity: 1, filter: 'blur(0px)', y: 0, duration: 1.3 },
+          '-=0.8'
+        );
 
-      // Phase 4: Supporting copy
-      tl.fromTo(
-        subcopyRef.current,
-        { y: 24, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8 },
-        '-=0.6'
-      );
+        // Phase 3: Headlines staggered
+        tl.fromTo(
+          headlinePart1Ref.current,
+          { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
+          { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
+          '-=0.9'
+        );
 
-      // Phase 5: CTA group & Badges
-      tl.fromTo(
-        [ctaGroupRef.current, badgesGroupRef.current],
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.15, duration: 0.8 },
-        '-=0.5'
-      );
+        tl.fromTo(
+          headlinePart2Ref.current,
+          { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
+          { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
+          '-=0.7'
+        );
 
-      // Section 08: Hero Scroll Transformation
-      // When scrolling down, product moves toward center, scales, background glow expands, text fades and journeys into next section
-      if (containerRef.current && heroImageContainerRef.current) {
-        gsap.to(heroImageContainerRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.8,
-          },
-          y: 140,
-          scale: 1.12,
-          ease: 'none',
-        });
+        // Phase 4: Supporting copy
+        tl.fromTo(
+          subcopyRef.current,
+          { y: 24, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8 },
+          '-=0.6'
+        );
 
-        gsap.to(heroContentRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: '60% top',
-            scrub: 0.5,
-          },
-          y: -80,
-          opacity: 0.1,
-          ease: 'none',
-        });
+        // Phase 5: CTA group & Badges
+        tl.fromTo(
+          [ctaGroupRef.current, badgesGroupRef.current],
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.15, duration: 0.8 },
+          '-=0.5'
+        );
 
-        gsap.to(ambientGlowRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-          scale: 1.4,
-          opacity: 0.7,
-        });
+        // Hero Scroll Transformation
+        if (containerRef.current && heroImageContainerRef.current) {
+          gsap.to(heroImageContainerRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: isDesktop ? 'bottom top' : 'bottom 30%',
+              scrub: 0.8,
+            },
+            y: isDesktop ? 140 : 30,
+            scale: isDesktop ? 1.12 : 1.03,
+            ease: 'none',
+          });
+
+          gsap.to(heroContentRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: isDesktop ? '60% top' : '40% top',
+              scrub: 0.5,
+            },
+            y: isDesktop ? -80 : -25,
+            opacity: 0.1,
+            ease: 'none',
+          });
+
+          gsap.to(ambientGlowRef.current, {
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 1,
+            },
+            scale: isDesktop ? 1.4 : 1.15,
+            opacity: 0.7,
+          });
+        }
       }
-    }, containerRef);
+    );
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
@@ -169,13 +178,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExp
           <div className="flex flex-col">
             <h1
               ref={headlinePart1Ref}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-[#0F172A] uppercase leading-[0.92]"
+              className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-[#0F172A] uppercase leading-[0.92]"
             >
               LUXURY CUISINE.
             </h1>
             <h1
               ref={headlinePart2Ref}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-gradient-ice uppercase leading-[0.92] mt-1"
+              className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-gradient-ice uppercase leading-[0.92] mt-1"
             >
               AUTHENTIC SOUL.
             </h1>
