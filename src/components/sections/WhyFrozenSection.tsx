@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const WhyFrozenSection: React.FC = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const pointsRef = useRef<HTMLDivElement | null>(null);
+  const visualRef = useRef<HTMLDivElement | null>(null);
+
   const points = [
     {
       title: 'Peak Harvest Nutrition Locked in Hours',
@@ -19,12 +28,80 @@ export const WhyFrozenSection: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3 Points staggered slide in
+      if (pointsRef.current && pointsRef.current.children.length > 0) {
+        gsap.fromTo(
+          pointsRef.current.children,
+          { opacity: 0, x: -25 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.7,
+            stagger: 0.16,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: pointsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Supporting visual card lift
+      if (visualRef.current) {
+        gsap.fromTo(
+          visualRef.current,
+          { opacity: 0, y: 35, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: visualRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-20 md:py-28 bg-[#F8F6F5]">
+    <section ref={containerRef} className="py-20 md:py-28 bg-[#F8F6F5] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-16 space-y-4">
+        <div ref={headerRef} className="max-w-3xl mb-16 space-y-4">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
             <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>Why Leafora</span>
@@ -41,7 +118,7 @@ export const WhyFrozenSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* 3 Meaningful Points */}
-          <div className="lg:col-span-7 space-y-8">
+          <div ref={pointsRef} className="lg:col-span-7 space-y-8">
             {points.map((pt, idx) => (
               <div key={pt.title} className="flex gap-4 sm:gap-6 items-start">
                 <div className="shrink-0 mt-0.5">
@@ -62,7 +139,7 @@ export const WhyFrozenSection: React.FC = () => {
           </div>
 
           {/* Supporting Visual: Genuine Food Photography */}
-          <div className="lg:col-span-5">
+          <div ref={visualRef} className="lg:col-span-5">
             <div className="rounded-3xl overflow-hidden bg-white border border-[#E4DDD4] shadow-[0_12px_36px_-10px_rgba(55,67,33,0.08)]">
               <div className="aspect-[4/3] sm:aspect-[5/4] overflow-hidden">
                 <img

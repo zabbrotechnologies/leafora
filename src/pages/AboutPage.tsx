@@ -1,20 +1,128 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Sprout, ShieldCheck, HeartHandshake, Snowflake, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface AboutPageProps {
   onRequestSample?: () => void;
 }
 
 export const AboutPage: React.FC<AboutPageProps> = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const featureCardRef = useRef<HTMLDivElement | null>(null);
+  const valuesGridRef = useRef<HTMLDivElement | null>(null);
+  const timelineRef = useRef<HTMLDivElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up on load
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }
+        );
+      }
+
+      // Feature card reveal
+      if (featureCardRef.current) {
+        gsap.fromTo(
+          featureCardRef.current,
+          { opacity: 0, y: 35, scale: 0.985 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: featureCardRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 4 Core values staggered entrance
+      if (valuesGridRef.current && valuesGridRef.current.children.length > 0) {
+        gsap.fromTo(
+          valuesGridRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.12,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: valuesGridRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 5-step timeline staggered entrance
+      if (timelineRef.current && timelineRef.current.children.length > 0) {
+        gsap.fromTo(
+          timelineRef.current.children,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: timelineRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Bottom CTA card reveal
+      if (ctaRef.current) {
+        gsap.fromTo(
+          ctaRef.current,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: ctaRef.current,
+              start: 'top 90%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <main className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D]">
+    <main ref={containerRef} className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 space-y-16 sm:space-y-24">
         
         {/* Wide Header Section */}
-        <div className="space-y-6 max-w-4xl">
+        <div ref={headerRef} className="space-y-6 max-w-4xl">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
-            <span className="w-6 h-[1.5px] bg-[#8DA256] rounded-full" />
+            <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>OUR STORY & PHILOSOPHY</span>
           </div>
 
@@ -28,7 +136,10 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
         </div>
 
         {/* Full-Width Origin Feature Card (Clean Single Border) */}
-        <div className="rounded-3xl bg-white border border-[#E4DDD4] overflow-hidden shadow-xs">
+        <div
+          ref={featureCardRef}
+          className="rounded-3xl bg-white border border-[#E4DDD4] overflow-hidden shadow-xs"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
             
             {/* Left Story Narrative */}
@@ -89,8 +200,8 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs">
+          <div ref={valuesGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <Sprout className="w-5 h-5 text-[#8DA256]" />
               </div>
@@ -102,7 +213,7 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
               </p>
             </div>
 
-            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs">
+            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-[#8DA256]" />
               </div>
@@ -114,7 +225,7 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
               </p>
             </div>
 
-            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs">
+            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <HeartHandshake className="w-5 h-5 text-[#8DA256]" />
               </div>
@@ -126,7 +237,7 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
               </p>
             </div>
 
-            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs">
+            <div className="p-7 rounded-3xl bg-white border border-[#E4DDD4] space-y-4 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <Snowflake className="w-5 h-5 text-[#8DA256]" />
               </div>
@@ -154,7 +265,7 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div ref={timelineRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="space-y-2">
               <span className="text-xs font-mono font-bold text-[#8DA256] block">06:00 AM</span>
               <h4 className="text-sm font-bold text-[#22241D]">Sunrise Harvest</h4>
@@ -198,7 +309,10 @@ export const AboutPage: React.FC<AboutPageProps> = () => {
         </div>
 
         {/* Final CTA Banner (Full Width) */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#374321] text-[#F8F6F5] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+        <div
+          ref={ctaRef}
+          className="p-8 sm:p-12 rounded-3xl bg-[#374321] text-[#F8F6F5] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm"
+        >
           <div className="space-y-2 max-w-xl">
             <h3 className="text-2xl sm:text-3xl font-heading font-black text-white">
               Taste the difference of true harvest freezing.

@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Star, CheckCircle2, Quote } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface Testimonial {
   id: string;
@@ -57,12 +61,64 @@ const TESTIMONIALS: Testimonial[] = [
 ];
 
 export const TestimonialsSection: React.FC = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3 Testimonial cards staggered reveal
+      if (cardsRef.current && cardsRef.current.children.length > 0) {
+        gsap.fromTo(
+          cardsRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-20 md:py-28 bg-[#F3EFEA] border-t border-[#E4DDD4]">
+    <section ref={containerRef} className="py-20 md:py-28 bg-[#F3EFEA] border-t border-[#E4DDD4] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
           <div className="max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
               <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
@@ -90,11 +146,11 @@ export const TestimonialsSection: React.FC = () => {
         </div>
 
         {/* Testimonials Grid (Clean, single-border cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {TESTIMONIALS.map((item) => (
             <div
               key={item.id}
-              className="rounded-3xl bg-white border border-[#E4DDD4] p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-white border border-[#E4DDD4] p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md"
             >
               <div className="space-y-4">
                 {/* Header of Card: Rating & Category Badge */}

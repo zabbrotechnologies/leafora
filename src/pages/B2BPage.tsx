@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Package, TrendingDown, Truck, CheckCircle2, ArrowRight, Layers, Building2, PhoneCall } from 'lucide-react';
 import { PRODUCTS_DATA } from '../data/mockData';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface BulkFormat {
   name: string;
@@ -47,6 +51,12 @@ const BULK_FORMATS: BulkFormat[] = [
 ];
 
 export const B2BPage: React.FC = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const pillarsRef = useRef<HTMLDivElement | null>(null);
+  const formatsRef = useRef<HTMLDivElement | null>(null);
+  const formRef = useRef<HTMLDivElement | null>(null);
+
   const [formData, setFormData] = useState({
     businessName: '',
     contactName: '',
@@ -61,6 +71,83 @@ export const B2BPage: React.FC = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }
+        );
+      }
+
+      // 4 Value proposition cards staggered entrance
+      if (pillarsRef.current && pillarsRef.current.children.length > 0) {
+        gsap.fromTo(
+          pillarsRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.12,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: pillarsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Packaging formats cards staggered entrance
+      if (formatsRef.current && formatsRef.current.children.length > 0) {
+        gsap.fromTo(
+          formatsRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: formatsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Wholesale form card reveal
+      if (formRef.current) {
+        gsap.fromTo(
+          formRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: formRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
 
   const toggleProduct = (prodName: string) => {
     setFormData((prev) => {
@@ -84,11 +171,11 @@ export const B2BPage: React.FC = () => {
   };
 
   return (
-    <main className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D]">
+    <main ref={containerRef} className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 space-y-16 sm:space-y-20">
         
         {/* Page Hero Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div ref={headerRef} className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <div className="max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
               <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
@@ -116,8 +203,8 @@ export const B2BPage: React.FC = () => {
         </div>
 
         {/* 4 Core B2B Value Proposition Cards (Clean Single Border Cards) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs">
+        <div ref={pillarsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <TrendingDown className="w-5 h-5 text-[#8DA256]" />
@@ -134,7 +221,7 @@ export const B2BPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs">
+          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <Package className="w-5 h-5 text-[#8DA256]" />
@@ -151,7 +238,7 @@ export const B2BPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs">
+          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <Layers className="w-5 h-5 text-[#8DA256]" />
@@ -168,7 +255,7 @@ export const B2BPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs">
+          <div className="rounded-3xl bg-white border border-[#E4DDD4] p-7 flex flex-col justify-between space-y-5 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center">
                 <Truck className="w-5 h-5 text-[#8DA256]" />
@@ -197,11 +284,11 @@ export const B2BPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div ref={formatsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {BULK_FORMATS.map((fmt) => (
               <div
                 key={fmt.name}
-                className="rounded-3xl bg-white border border-[#E4DDD4] p-7 sm:p-8 flex flex-col justify-between space-y-6 shadow-xs"
+                className="rounded-3xl bg-white border border-[#E4DDD4] p-7 sm:p-8 flex flex-col justify-between space-y-6 shadow-xs transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md"
               >
                 <div className="space-y-4">
                   <div className="space-y-1">
@@ -247,7 +334,11 @@ export const B2BPage: React.FC = () => {
         </div>
 
         {/* B2B Quotation & Sample Inquiry Form (Single Clean Border Card) */}
-        <div id="b2b-form" className="rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 md:p-12 shadow-xs scroll-mt-28">
+        <div
+          ref={formRef}
+          id="b2b-form"
+          className="rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 md:p-12 shadow-xs scroll-mt-28"
+        >
           <div className="max-w-3xl mb-8 space-y-3">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
               <Building2 className="w-4 h-4" />

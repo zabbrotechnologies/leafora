@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Sparkles, Check, ArrowRight, Snowflake, Utensils } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface CookingTechnique {
   title: string;
@@ -74,14 +78,117 @@ const COOKING_TECHNIQUES: CookingTechnique[] = [
 ];
 
 export const CulinaryGuidePage: React.FC = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const goldenRuleRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const benchmarkRef = useRef<HTMLDivElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }
+        );
+      }
+
+      // Golden Rule card entrance
+      if (goldenRuleRef.current) {
+        gsap.fromTo(
+          goldenRuleRef.current,
+          { opacity: 0, y: 35, scale: 0.985 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: goldenRuleRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Technique cards staggered entrance
+      if (gridRef.current && gridRef.current.children.length > 0) {
+        gsap.fromTo(
+          gridRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Benchmark table reveal
+      if (benchmarkRef.current) {
+        gsap.fromTo(
+          benchmarkRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: benchmarkRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Bottom CTA card reveal
+      if (ctaRef.current) {
+        gsap.fromTo(
+          ctaRef.current,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: ctaRef.current,
+              start: 'top 90%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <main className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D]">
+    <main ref={containerRef} className="relative min-h-screen pt-32 pb-24 bg-[#F8F6F5] text-[#22241D] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 space-y-16 sm:space-y-20">
         
         {/* Page Hero Header */}
-        <div className="max-w-3xl space-y-4">
+        <div ref={headerRef} className="max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
-            <span className="w-6 h-[1.5px] bg-[#8DA256] rounded-full" />
+            <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>KITCHEN & CULINARY MANUAL</span>
           </div>
 
@@ -95,7 +202,10 @@ export const CulinaryGuidePage: React.FC = () => {
         </div>
 
         {/* The Golden Rule Banner (Clean Single Border Card) */}
-        <div className="rounded-3xl bg-[#374321] text-[#F8F6F5] p-8 sm:p-12 relative overflow-hidden shadow-sm">
+        <div
+          ref={goldenRuleRef}
+          className="rounded-3xl bg-[#374321] text-[#F8F6F5] p-8 sm:p-12 relative overflow-hidden shadow-sm"
+        >
           <div className="max-w-3xl space-y-5 relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-mono font-bold tracking-wider text-[#A8E6CF] uppercase">
               <Snowflake className="w-3.5 h-3.5" />
@@ -138,18 +248,18 @@ export const CulinaryGuidePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {COOKING_TECHNIQUES.map((tech) => (
               <div
                 key={tech.title}
-                className="rounded-3xl bg-white border border-[#E4DDD4] overflow-hidden flex flex-col justify-between shadow-xs transition-all duration-300 hover:shadow-md"
+                className="group rounded-3xl bg-white border border-[#E4DDD4] overflow-hidden flex flex-col justify-between shadow-xs transition-all duration-300 hover:shadow-md hover:-translate-y-1"
               >
                 {/* Visual Header */}
                 <div className="relative aspect-[16/9] overflow-hidden bg-[#F3EFEA]">
                   <img
                     src={tech.image}
                     alt={tech.title}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-104"
                     loading="lazy"
                   />
                   <div className="absolute top-4 left-4 bg-[#22241D]/80 backdrop-blur-md text-[#F8F6F5] px-3.5 py-1.5 rounded-full border border-white/20 text-[10px] font-mono font-bold tracking-wider uppercase">
@@ -223,7 +333,10 @@ export const CulinaryGuidePage: React.FC = () => {
         </div>
 
         {/* Kitchen Prep Economics: Fresh Raw vs Leafora Frozen */}
-        <div className="rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 space-y-8 shadow-xs">
+        <div
+          ref={benchmarkRef}
+          className="rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 space-y-8 shadow-xs"
+        >
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
               <Utensils className="w-4 h-4" />
@@ -279,7 +392,10 @@ export const CulinaryGuidePage: React.FC = () => {
         </div>
 
         {/* Bottom CTA to Explore Products & Reach Us */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-white border border-[#E4DDD4] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs">
+        <div
+          ref={ctaRef}
+          className="p-8 sm:p-12 rounded-3xl bg-white border border-[#E4DDD4] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs"
+        >
           <div className="space-y-2 max-w-xl">
             <h3 className="text-2xl font-heading font-black text-[#22241D]">
               Ready to elevate your cooking speed?

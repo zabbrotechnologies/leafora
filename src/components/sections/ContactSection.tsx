@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Mail, Phone, MapPin, Clock, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
 import { PRODUCTS_DATA } from '../../data/mockData';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const ContactSection: React.FC = () => {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const formCardRef = useRef<HTMLDivElement | null>(null);
+  const channelsRef = useRef<HTMLDivElement | null>(null);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,6 +24,73 @@ export const ContactSection: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // Header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Form card lift
+      if (formCardRef.current) {
+        gsap.fromTo(
+          formCardRef.current,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: formCardRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // Channels column staggered slide
+      if (channelsRef.current && channelsRef.current.children.length > 0) {
+        gsap.fromTo(
+          channelsRef.current.children,
+          { opacity: 0, x: 25 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: channelsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -25,12 +101,16 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="reach-us" className="py-20 md:py-28 bg-[#F8F6F5] border-t border-[#E4DDD4] scroll-mt-24">
+    <section
+      ref={containerRef}
+      id="reach-us"
+      className="py-20 md:py-28 bg-[#F8F6F5] border-t border-[#E4DDD4] scroll-mt-24 overflow-hidden"
+    >
       <div id="contact" className="scroll-mt-24" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16 space-y-3">
+        <div ref={headerRef} className="max-w-3xl mb-12 sm:mb-16 space-y-3">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
             <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>Direct Inquiries & Supply</span>
@@ -47,7 +127,7 @@ export const ContactSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* Left: Interactive Form Card (Clean Single Border) */}
-          <div className="lg:col-span-7 rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 shadow-xs">
+          <div ref={formCardRef} className="lg:col-span-7 rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-10 shadow-xs">
             {isSubmitted ? (
               <div className="py-12 text-center space-y-5">
                 <div className="w-14 h-14 rounded-2xl bg-[#F3EFEA] border border-[#E4DDD4] text-[#374321] flex items-center justify-center mx-auto">
@@ -201,7 +281,7 @@ export const ContactSection: React.FC = () => {
           </div>
 
           {/* Right: Direct Kitchen Communication Channels */}
-          <div className="lg:col-span-5 space-y-6">
+          <div ref={channelsRef} className="lg:col-span-5 space-y-6">
             
             {/* Direct Cards (Single Border) */}
             <div className="rounded-3xl bg-white border border-[#E4DDD4] p-6 sm:p-7 space-y-4">

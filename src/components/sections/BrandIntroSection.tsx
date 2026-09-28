@@ -34,13 +34,15 @@ export const BrandIntroSection: React.FC = () => {
     },
   ];
 
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const section = sectionRef.current;
     const watermark = watermarkRef.current;
     if (!section || !watermark) return;
 
     // Smooth horizontal parallax scroll animation on faded background text
-    // Centered when the section is in view, gliding smoothly on scroll
     const ctx = gsap.context(() => {
       gsap.fromTo(
         watermark,
@@ -56,6 +58,45 @@ export const BrandIntroSection: React.FC = () => {
           },
         }
       );
+
+      // Section header smooth fade up
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3 Pillar cards staggered entrance
+      if (cardsRef.current && cardsRef.current.children.length > 0) {
+        gsap.fromTo(
+          cardsRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
     }, section);
 
     return () => ctx.revert();
@@ -81,7 +122,7 @@ export const BrandIntroSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
         {/* Editorial Section Introduction */}
-        <div className="max-w-3xl mb-16 space-y-4">
+        <div ref={headerRef} className="max-w-3xl mb-16 space-y-4">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
             <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>THE LEAFORA PROMISE</span>
@@ -96,7 +137,7 @@ export const BrandIntroSection: React.FC = () => {
         </div>
 
         {/* 3 Editorial Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {pillars.map((pillar) => (
             <div
               key={pillar.num}
