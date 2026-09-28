@@ -65,8 +65,8 @@ export const SampleRequestModal: React.FC<SampleRequestModalProps> = ({ isOpen, 
           <div className="p-6 sm:p-10">
             {/* Header */}
             <div className="mb-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full frost-badge text-[11px] font-semibold tracking-wider text-[#0F172A] uppercase mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+              <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256] mb-2">
+                <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
                 <span>Complimentary Cryogenic Cold Shipper</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-heading font-black text-[#0F172A] tracking-tight">

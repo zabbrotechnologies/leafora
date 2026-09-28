@@ -1,299 +1,117 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Sparkles, Compass } from 'lucide-react';
-import { FloatingIngredients } from '../common/FloatingIngredients';
-
-gsap.registerPlugin(ScrollTrigger);
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, Check } from 'lucide-react';
 
 interface HeroSectionProps {
-  onRequestSample: () => void;
-  onExploreRange: () => void;
+  onRequestSample?: () => void;
+  onExploreRange?: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onRequestSample, onExploreRange }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const heroContentRef = useRef<HTMLDivElement | null>(null);
-  const heroImageContainerRef = useRef<HTMLDivElement | null>(null);
-  const heroImageRef = useRef<HTMLImageElement | null>(null);
-  const headlinePart1Ref = useRef<HTMLHeadingElement | null>(null);
-  const headlinePart2Ref = useRef<HTMLHeadingElement | null>(null);
-  const subcopyRef = useRef<HTMLParagraphElement | null>(null);
-  const ctaGroupRef = useRef<HTMLDivElement | null>(null);
-  const badgesGroupRef = useRef<HTMLDivElement | null>(null);
-  const ambientGlowRef = useRef<HTMLDivElement | null>(null);
-
-  // 3D Tilt State
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = heroImageContainerRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    const rx = -(y / (rect.height / 2)) * 10;
-    const ry = (x / (rect.width / 2)) * 10;
-    setTilt({ rx, ry });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ rx: 0, ry: 0 });
-  };
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add(
-      {
-        isDesktop: '(min-width: 1024px)',
-        isMobile: '(max-width: 1023px)',
-      },
-      (context) => {
-        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
-
-        // Intro timeline
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-        // Phase 1: Ambient glow
-        tl.fromTo(
-          ambientGlowRef.current,
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 1.2 }
-        );
-
-        // Phase 2: Product enters from slight depth
-        tl.fromTo(
-          heroImageRef.current,
-          { scale: 1.08, opacity: 0, filter: 'blur(8px)', y: 30 },
-          { scale: 1, opacity: 1, filter: 'blur(0px)', y: 0, duration: 1.3 },
-          '-=0.8'
-        );
-
-        // Phase 3: Headlines staggered
-        tl.fromTo(
-          headlinePart1Ref.current,
-          { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
-          { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
-          '-=0.9'
-        );
-
-        tl.fromTo(
-          headlinePart2Ref.current,
-          { y: 40, opacity: 0, clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' },
-          { y: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.9 },
-          '-=0.7'
-        );
-
-        // Phase 4: Supporting copy
-        tl.fromTo(
-          subcopyRef.current,
-          { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
-          '-=0.6'
-        );
-
-        // Phase 5: CTA group & Badges
-        tl.fromTo(
-          [ctaGroupRef.current, badgesGroupRef.current],
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.15, duration: 0.8 },
-          '-=0.5'
-        );
-
-        // Hero Scroll Transformation
-        if (containerRef.current && heroImageContainerRef.current) {
-          gsap.to(heroImageContainerRef.current, {
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top top',
-              end: isDesktop ? 'bottom top' : 'bottom 30%',
-              scrub: 0.8,
-            },
-            y: isDesktop ? 140 : 30,
-            scale: isDesktop ? 1.12 : 1.03,
-            ease: 'none',
-          });
-
-          gsap.to(heroContentRef.current, {
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top top',
-              end: isDesktop ? '60% top' : '40% top',
-              scrub: 0.5,
-            },
-            y: isDesktop ? -80 : -25,
-            opacity: 0.1,
-            ease: 'none',
-          });
-
-          gsap.to(ambientGlowRef.current, {
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: 1,
-            },
-            scale: isDesktop ? 1.4 : 1.15,
-            opacity: 0.7,
-          });
-        }
-      }
-    );
-
-    return () => mm.revert();
-  }, []);
-
+export const HeroSection: React.FC<HeroSectionProps> = () => {
   return (
-    <section
-      ref={containerRef}
-      id="hero"
-      className="relative min-h-[100vh] w-full flex items-center justify-center pt-28 pb-16 overflow-hidden"
-    >
-      {/* Floating Ingredient Parallax Layer */}
-      <FloatingIngredients scene="hero" />
+    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-[#F8F6F5] overflow-hidden">
+      {/* Subtle Warm Greige Accent Plane */}
+      <div className="absolute top-0 right-0 w-full lg:w-1/2 h-full bg-[#F3EFEA] -z-10 hidden lg:block" />
 
-      {/* Dynamic Ambient Background Glow */}
-      <div
-        ref={ambientGlowRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] h-[70vw] max-h-[900px] rounded-full pointer-events-none -z-10 opacity-70"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(168, 230, 207, 0.45) 0%, rgba(185, 227, 249, 0.35) 45%, rgba(248, 251, 252, 0) 70%)',
-        }}
-      />
-
-      <div className="max-w-7xl mx-auto px-6 md:px-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        {/* Left Editorial Content */}
-        <div ref={heroContentRef} className="lg:col-span-7 flex flex-col gap-6 z-20">
-          {/* Micro Tag / Editorial Label */}
-          <div ref={badgesGroupRef} className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider uppercase text-[#0F172A] shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
-              <span>Real Farm Harvests • Frozen at Peak</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Column: Clear Brand Communication */}
+          <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+            {/* Minimal Editorial Kicker */}
+            <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
+              <span className="w-6 h-[1.5px] bg-[#8DA256] rounded-full" />
+              <span>Flash-Frozen at Morning Harvest</span>
             </div>
-          </div>
 
-          {/* Staggered Cinematic Headlines */}
-          <div className="flex flex-col">
-            <h1
-              ref={headlinePart1Ref}
-              className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-[#0F172A] uppercase leading-[0.92]"
-            >
-              REAL FOOD.
+            {/* Clear, Human Headline */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-black text-[#22241D] leading-[1.08] tracking-tight">
+              Real Vegetables & Kitchen Staples, Frozen at Peak Flavor.
             </h1>
-            <h1
-              ref={headlinePart2Ref}
-              className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tight text-gradient-ice uppercase leading-[0.92] mt-1"
-            >
-              READY WHEN YOU ARE.
-            </h1>
-          </div>
 
-          {/* Supporting Copy */}
-          <p
-            ref={subcopyRef}
-            className="text-base sm:text-lg text-[#0F172A]/75 max-w-xl font-normal leading-relaxed"
-          >
-            <strong>Leafora Fresh</strong> makes everyday cooking simple and flavorful with cryogenically locked vegetables, pure coconut blocks, and stone-crushed masala cubes frozen at -40°C within hours of morning harvest.
-          </p>
+            {/* Direct, Honest Brand Statement */}
+            <p className="text-base sm:text-lg text-[#575D4E] leading-relaxed max-w-xl">
+              <strong className="text-[#22241D] font-semibold">Leafora Fresh</strong> brings you pure coconut blocks, stone-crushed masala cubes, and tender farm greens flash-frozen within hours of picking. 100% usable food, zero prep waste, direct into your pan.
+            </p>
 
-          {/* CTA Group */}
-          <div ref={ctaGroupRef} className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              onClick={onExploreRange}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#0F172A] text-white text-sm font-semibold tracking-wide shadow-[0_10px_25px_-5px_rgba(15,23,42,0.25)] hover:shadow-[0_15px_30px_-5px_rgba(20,184,166,0.35)] transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-            >
-              <span>Explore Our Products</span>
-              <div className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
-                <ArrowRight className="w-3.5 h-3.5 text-[#A8E6CF]" />
-              </div>
-            </button>
+            {/* Clear Action CTAs */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <Link
+                to="/products"
+                className="px-7 py-3.5 rounded-full bg-[#374321] text-[#F8F6F5] text-xs font-bold tracking-wide hover:bg-[#48572B] transition-all duration-200 shadow-md flex items-center gap-2"
+              >
+                <span>Explore Our Products</span>
+                <ArrowUpRight className="w-4 h-4 text-[#8DA256]" />
+              </Link>
 
-            <button
-              onClick={onRequestSample}
-              className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-white/80 hover:bg-white text-[#0F172A] text-sm font-semibold tracking-wide border border-[#B9E3F9]/60 backdrop-blur-md shadow-xs transition-all duration-300 hover:border-[#14B8A6]/60 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-[#14B8A6]" />
-              <span>Request Sample Shipper</span>
-            </button>
-          </div>
-
-          {/* Spec Badges Line */}
-          <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#B9E3F9]/40 max-w-lg">
-            <div>
-              <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
-                0 <span className="text-xs font-mono font-medium text-[#14B8A6]">PREP</span>
-              </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Ready Straight to Pan</div>
+              <Link
+                to="/about"
+                className="px-6 py-3.5 rounded-full bg-white text-[#22241D] text-xs font-bold tracking-wide border border-[#E4DDD4] hover:bg-[#F3EFEA] transition-all duration-200"
+              >
+                <span>Our Story</span>
+              </Link>
             </div>
-            <div>
-              <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
-                -40°C
+
+            {/* Verified Food Values */}
+            <div className="pt-6 border-t border-[#E4DDD4] grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-[#575D4E]">
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-[#8DA256] shrink-0 stroke-[2.5]" />
+                <span>Zero Chemical Preservatives</span>
               </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Instant Cold Lock</div>
-            </div>
-            <div>
-              <div className="text-xl sm:text-2xl font-heading font-black text-[#0F172A]">
-                100%
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-[#8DA256] shrink-0 stroke-[2.5]" />
+                <span>100% Edible Kitchen Yield</span>
               </div>
-              <div className="text-[11px] text-[#0F172A]/60 font-medium">Usable Net Weight</div>
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-[#8DA256] shrink-0 stroke-[2.5]" />
+                <span>Melts in Hot Pan in 25s</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Floating Product Hero Composition with 3D Tilt */}
-        <div className="lg:col-span-5 relative flex items-center justify-center z-20">
-          <div
-            ref={heroImageContainerRef}
-            data-cursor-type="product"
-            data-cursor-label="EXPLORE"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{
-              transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-              transition: 'transform 0.15s ease-out',
-            }}
-            className="relative w-full max-w-[440px] aspect-square flex items-center justify-center cursor-pointer"
-          >
-            {/* Ambient Glass Frame */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/70 via-white/40 to-white/90 border border-white/80 shadow-[0_30px_70px_-20px_rgba(15,23,42,0.12)] backdrop-blur-xl -rotate-2 transform transition-transform duration-700" />
+          {/* Right Column: Authentic Food Imagery */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative rounded-3xl overflow-hidden bg-white border border-[#E4DDD4] shadow-[0_20px_50px_-15px_rgba(55,67,33,0.12)]">
+              {/* Product Photography */}
+              <div className="aspect-[4/3] sm:aspect-[1/1] overflow-hidden relative">
+                <img
+                  src="/images/hero_frozen_macro.jpg"
+                  alt="Leafora Fresh flash-frozen produce preserved at peak harvest"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-103"
+                  loading="eager"
+                />
+              </div>
 
-            {/* Inner Frost Spec Glass Tag */}
-            <div className="absolute top-6 left-6 z-30 px-3.5 py-1.5 rounded-xl bg-white/90 backdrop-blur-md border border-[#B9E3F9]/60 shadow-sm flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#14B8A6]" />
-              <span className="text-[11px] font-mono font-bold tracking-wider text-[#0F172A]">
-                LEAFORA • READY-TO-MELT CUBES
+              {/* Informative Editorial Caption */}
+              <div className="p-6 bg-white border-t border-[#E4DDD4] space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#8DA256]">
+                    HARVEST STAPLE
+                  </span>
+                  <span className="text-[11px] font-semibold text-[#575D4E]">
+                    -40°C Instant Lock
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-[#22241D]">
+                  Grade-A Sweet Peas & Fresh Aromatics
+                </h3>
+                <p className="text-xs text-[#575D4E] leading-relaxed">
+                  Frozen within hours of field harvest to lock in natural sweetness, chlorophyll green, and cellular crunch.
+                </p>
+              </div>
+            </div>
+
+            {/* Subtle floating feature callout */}
+            <div className="absolute -bottom-4 -left-4 sm:-bottom-5 sm:-left-5 bg-[#374321] text-[#F8F6F5] px-5 py-3 rounded-2xl shadow-xl border border-[#8DA256]/30 hidden sm:flex flex-col text-left">
+              <span className="text-[10px] uppercase tracking-[0.18em] text-[#8DA256] font-bold">
+                Field to Freezer
+              </span>
+              <span className="text-xs font-extrabold text-[#F8F6F5] tracking-wide">
+                Under 2 Hours
               </span>
             </div>
-
-            {/* Floating Hero Product Image */}
-            <div className="relative w-[88%] h-[88%] rounded-2xl overflow-hidden shadow-[0_20px_40px_-10px_rgba(15,23,42,0.15)] z-20 bg-white">
-              <img
-                ref={heroImageRef}
-                src="/images/masala_cubes.jpg"
-                alt="Leafora Fresh Masala Cubes with ginger-garlic and green chilli aromatics"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/40 via-transparent to-white/10 pointer-events-none" />
-            </div>
-
-            {/* Floating Glass Metadata Pill Bottom */}
-            <div className="absolute -bottom-4 right-4 z-30 px-4 py-2.5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#B9E3F9] shadow-[0_12px_24px_rgba(15,23,42,0.08)] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-[#14B8A6]">
-                <Compass className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-mono font-semibold text-[#0F172A]/50 uppercase tracking-widest">
-                  Flavor & Texture
-                </span>
-                <span className="text-xs font-bold text-[#0F172A]">
-                  Natural Crunch & Aroma Locked
-                </span>
-              </div>
-            </div>
           </div>
+
         </div>
       </div>
     </section>

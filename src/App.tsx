@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import type { Product } from './types';
-import { CustomCursor } from './components/common/CustomCursor';
-import { ScrollProgress } from './components/common/ScrollProgress';
-import { AmbientBackground } from './components/common/AmbientBackground';
-import { IceParticlesCanvas } from './components/common/IceParticlesCanvas';
-import { LoadingScreen } from './components/common/LoadingScreen';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { ScrollToTop } from './components/common/ScrollToTop';
@@ -20,30 +14,20 @@ import { ProductDetailPage } from './pages/ProductDetailPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 
-import { ProductDetailModal } from './components/modals/ProductDetailModal';
-import { SampleRequestModal } from './components/modals/SampleRequestModal';
-import { ColdChainCalculatorModal } from './components/modals/ColdChainCalculatorModal';
-
 gsap.registerPlugin(ScrollTrigger);
 
 export function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
-  const [isCalculatorModalOpen, setIsCalculatorModalOpen] = useState(false);
-
   useEffect(() => {
-    // Detect mobile touch device
+    // Gentle, predictable Lenis smooth scrolling without wheel hijacking
     const isTouchDevice =
       typeof window !== 'undefined' &&
       ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024);
 
-    // Initialize smooth scrolling with Lenis
     const lenis = new Lenis({
-      duration: isTouchDevice ? 0.8 : 1.1,
+      duration: isTouchDevice ? 0.7 : 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: !isTouchDevice,
-      touchMultiplier: isTouchDevice ? 1 : 1.2,
+      touchMultiplier: 1,
       infinite: false,
     });
 
@@ -65,102 +49,28 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <div className="relative min-h-screen bg-[#F8FBFC] text-[#0F172A] selection:bg-[#14B8A6]/20 selection:text-[#0F172A]">
-        {/* Reset window scroll to top on route change */}
+      <div className="relative min-h-screen bg-[#F8F6F5] text-[#22241D] flex flex-col justify-between">
+        {/* Reset scroll on route change */}
         <ScrollToTop />
 
-        {/* Loading Screen Experience on Initial Mount */}
-        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+        {/* Minimal Navigation */}
+        <Navbar />
 
-        {/* Global Ambient Canvas Atmosphere */}
-        <CustomCursor />
-        <ScrollProgress />
-        <AmbientBackground />
-        <IceParticlesCanvas />
+        {/* Connected Multi-Page Routes */}
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            {/* Catch-all redirect to Home */}
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+        </div>
 
-        {/* Dynamic Global Navbar */}
-        <Navbar
-          onRequestSample={() => setIsSampleModalOpen(true)}
-          onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-        />
-
-        {/* Dynamic Multi-Page Routes */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                onSelectProduct={(prod) => setSelectedProduct(prod)}
-                onRequestSample={() => setIsSampleModalOpen(true)}
-                onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/products"
-            element={
-              <ProductsPage
-                onSelectProduct={(prod) => setSelectedProduct(prod)}
-                onRequestSample={() => setIsSampleModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/products/:id"
-            element={
-              <ProductDetailPage
-                onRequestSample={() => setIsSampleModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <AboutPage
-                onRequestSample={() => setIsSampleModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/contact"
-            element={<ContactPage />}
-          />
-          {/* Catch-all redirect to Home */}
-          <Route
-            path="*"
-            element={
-              <HomePage
-                onSelectProduct={(prod) => setSelectedProduct(prod)}
-                onRequestSample={() => setIsSampleModalOpen(true)}
-                onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-              />
-            }
-          />
-        </Routes>
-
-        {/* Global Footer & Live Cold-Chain Telemetry */}
-        <Footer
-          onRequestSample={() => setIsSampleModalOpen(true)}
-          onOpenCalculator={() => setIsCalculatorModalOpen(true)}
-        />
-
-        {/* Global Interactive Modals */}
-        <ProductDetailModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onRequestSample={() => setIsSampleModalOpen(true)}
-        />
-
-        <SampleRequestModal
-          isOpen={isSampleModalOpen}
-          onClose={() => setIsSampleModalOpen(false)}
-        />
-
-        <ColdChainCalculatorModal
-          isOpen={isCalculatorModalOpen}
-          onClose={() => setIsCalculatorModalOpen(false)}
-          onRequestSample={() => setIsSampleModalOpen(true)}
-        />
+        {/* Clean Editorial Footer */}
+        <Footer />
       </div>
     </BrowserRouter>
   );

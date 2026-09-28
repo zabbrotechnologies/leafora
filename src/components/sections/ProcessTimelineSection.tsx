@@ -56,8 +56,8 @@ export const ProcessTimelineSection: React.FC = () => {
       {/* Top Header & Section Title */}
       <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-20">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-2 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
+          <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256] mb-2">
+            <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
             <span>Harvest-to-Freezer Journey • 6-Step Protocol</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#0F172A] tracking-tight">

@@ -25,5 +25,7 @@ dist-ssr
 
 # Audit artifacts
 audit_screenshots/
+audit_results/
+test_*.mjs
 /*.png
 webscrape_audit_report.json

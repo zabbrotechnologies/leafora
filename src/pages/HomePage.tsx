@@ -1,76 +1,35 @@
 import React from 'react';
-import type { Product } from '../types';
 import { HeroSection } from '../components/sections/HeroSection';
-import { FreezingMomentSection } from '../components/sections/FreezingMomentSection';
-import { ProductScrollDeckSection } from '../components/sections/ProductScrollDeckSection';
+import { MarqueeBanner } from '../components/common/MarqueeBanner';
+import { BrandIntroSection } from '../components/sections/BrandIntroSection';
 import { WhyFrozenSection } from '../components/sections/WhyFrozenSection';
-import { ProcessTimelineSection } from '../components/sections/ProcessTimelineSection';
-import { KitchensSection } from '../components/sections/KitchensSection';
-import { B2BSection } from '../components/sections/B2BSection';
+import { ProductShowcaseSection } from '../components/sections/ProductShowcaseSection';
 import { BrandStorySection } from '../components/sections/BrandStorySection';
 import { FinalCtaSection } from '../components/sections/FinalCtaSection';
 
-interface HomePageProps {
-  onSelectProduct: (product: Product) => void;
-  onRequestSample: () => void;
-  onOpenCalculator: () => void;
-}
-
-export const HomePage: React.FC<HomePageProps> = ({
-  onSelectProduct,
-  onRequestSample,
-  onOpenCalculator,
-}) => {
-  const scrollToProducts = () => {
-    const el = document.getElementById('product-deck');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
+export const HomePage: React.FC = () => {
   return (
-    <main className="relative z-20">
-      {/* Chapter 01: Hero & Cryogenic Brand Entry */}
-      <HeroSection
-        onRequestSample={onRequestSample}
-        onExploreRange={scrollToProducts}
-      />
+    <main className="relative z-10">
+      {/* 1. What is Leafora? Clear hero statement with authentic product imagery */}
+      <HeroSection />
 
-      {/* Chapter 02: -40°C Instant Phase Lock Interactive Sensor */}
-      <FreezingMomentSection />
+      {/* Subtle continuous CSS marquee divider */}
+      <MarqueeBanner />
 
-      {/* Chapter 03: Exclusive Products Scroll Showcase (Right-to-Left Single Card Scrub) */}
-      <ProductScrollDeckSection
-        onSelectProduct={onSelectProduct}
-        onRequestSample={onRequestSample}
-      />
+      {/* 2. What does Leafora offer? 3 core editorial pillars & brand approach */}
+      <BrandIntroSection />
 
-      {/* Chapter 04: Why Leafora - 4 Value Pillars & Comparative Bio-Potency Matrix */}
+      {/* 3. Why does it matter? 3 verified value points & source visual */}
       <WhyFrozenSection />
 
-      {/* Chapter 05: The Cold-Chain Protocol - 6-Stage Process Journey */}
-      <ProcessTimelineSection />
+      {/* 4. What products are available? Flagship harvest essentials linking to detail pages */}
+      <ProductShowcaseSection />
 
-      {/* Chapter 06: For Every Kitchen - Multi-Segment Foodservice Solutions */}
-      <KitchensSection
-        onRequestSample={onRequestSample}
-        onOpenCalculator={onOpenCalculator}
-      />
+      {/* 5. Who is behind the brand? Editorial philosophy teaser linking to /about */}
+      <BrandStorySection />
 
-      {/* Chapter 07: B2B Commercial Supply & Instant Kitchen ROI Calculator */}
-      <B2BSection
-        onRequestSample={onRequestSample}
-        onOpenCalculator={onOpenCalculator}
-      />
-
-      {/* Chapter 08: Heritage Philosophy & Soil Stewardship */}
-      <BrandStorySection onRequestSample={onRequestSample} />
-
-      {/* Chapter 09: Final High-Converting Call to Action */}
-      <FinalCtaSection
-        onRequestSample={onRequestSample}
-        onOpenCalculator={onOpenCalculator}
-      />
+      {/* 6. What can I do next? Clear next action to explore products or contact */}
+      <FinalCtaSection />
     </main>
   );
 };

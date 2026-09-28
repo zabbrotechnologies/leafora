@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Product } from '../../types';
 import { PRODUCTS_DATA } from '../../data/mockData';
 import { ArrowUpRight, Snowflake, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,15 +14,25 @@ interface ProductScrollDeckProps {
 }
 
 export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
-  onSelectProduct,
+  // onSelectProduct kept in props signature for compatibility but navigation now uses Link
   onRequestSample,
 }) => {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const cardsContainerRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   // Take the 6 signature products for the minimal scroll deck
   const deckProducts = PRODUCTS_DATA.slice(0, 6);
+
+  // Track desktop state responsively
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -37,16 +48,20 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
       // Desktop & Laptop: Clean pinned sequence mapped to scroll position
       cards.forEach((card, i) => {
         if (i === 0) {
+          // Center: xPercent -50 (left:50% + xPercent:-50 = exactly centered)
           gsap.set(card, {
-            xPercent: 0,
+            xPercent: -50,
+            yPercent: -50,
             opacity: 1,
             scale: 1,
             zIndex: 10,
             filter: 'blur(0px)',
           });
         } else {
+          // Off-screen right: xPercent -50+120 = 70
           gsap.set(card, {
-            xPercent: 120,
+            xPercent: 70,
+            yPercent: -50,
             opacity: 0,
             scale: 0.94,
             zIndex: 5,
@@ -80,7 +95,7 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
         tl.to(
           currentCard,
           {
-            xPercent: -120,
+            xPercent: -170, // -50 center + -120 off-left
             opacity: 0,
             scale: 0.94,
             filter: 'blur(6px)',
@@ -93,7 +108,7 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
         tl.to(
           nextCard,
           {
-            xPercent: 0,
+            xPercent: -50, // back to center
             opacity: 1,
             scale: 1,
             filter: 'blur(0px)',
@@ -111,7 +126,7 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
     return () => mm.revert();
   }, [deckProducts.length]);
 
-  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+  // isDesktop is now reactive state above
 
   return (
     <section
@@ -161,10 +176,10 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
         </div>
       </div>
 
-      {/* Main Stage: Single Active Card */}
+      {/* Main Stage: Single Active Card - overflow-hidden clips off-screen cards */}
       <div
         ref={cardsContainerRef}
-        className="relative max-w-4xl mx-auto w-full flex-1 flex items-center justify-center my-auto min-h-[380px] sm:min-h-[440px] z-20"
+        className="relative max-w-4xl mx-auto w-full flex-1 flex items-center justify-center my-auto min-h-[380px] sm:min-h-[440px] z-20 overflow-hidden"
       >
         {deckProducts.map((product, idx) => {
           // On mobile, show active card if not desktop
@@ -173,8 +188,10 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
           return (
             <div
               key={product.id}
-              className={`deck-card w-full max-w-3xl glass-panel rounded-3xl p-5 sm:p-8 shadow-2xl border border-[#B9E3F9]/70 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-white/95 backdrop-blur-xl transition-opacity duration-300 ${
-                isDesktop ? 'absolute inset-x-0 mx-auto' : isCurrentActive ? 'relative' : 'hidden'
+              className={`deck-card w-full max-w-3xl glass-panel rounded-3xl p-5 sm:p-8 shadow-2xl border border-[#B9E3F9]/70 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-white/95 backdrop-blur-xl ${
+                isDesktop
+                  ? 'absolute top-1/2 left-1/2'  /* GSAP handles translate via xPercent/yPercent */
+                  : isCurrentActive ? 'relative' : 'hidden'
               }`}
             >
               {/* Left: Clean Product Visual */}
@@ -236,13 +253,13 @@ export const ProductScrollDeckSection: React.FC<ProductScrollDeckProps> = ({
 
                 {/* Minimal CTAs */}
                 <div className="flex items-center gap-3 pt-2">
-                  <button
-                    onClick={() => onSelectProduct(product)}
-                    className="px-5 py-2.5 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide hover:bg-[#14B8A6] hover:text-[#0F172A] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="px-5 py-2.5 rounded-full bg-[#0F172A] text-white text-xs font-bold tracking-wide hover:bg-[#14B8A6] hover:text-[#0F172A] transition-all flex items-center gap-1.5 shadow-sm"
                   >
-                    <span>Quick Specs</span>
+                    <span>View Details</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+                  </Link>
 
                   <button
                     onClick={onRequestSample}

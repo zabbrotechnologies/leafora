@@ -1,74 +1,109 @@
-import React from 'react';
-import { ArrowRight, Sparkles, ShieldCheck, Check } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, Mail } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface FinalCtaSectionProps {
-  onRequestSample: () => void;
-  onOpenCalculator: () => void;
+  onRequestSample?: () => void;
+  onOpenCalculator?: () => void;
 }
 
-export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
-  onRequestSample,
-  onOpenCalculator,
-}) => {
+export const FinalCtaSection: React.FC<FinalCtaSectionProps> = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const watermarkRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const watermark = watermarkRef.current;
+    if (!section || !watermark) return;
+
+    // Smooth horizontal parallax scroll animation on faded background text
+    // Centered when the section is in view, gliding smoothly on scroll
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        watermark,
+        { x: '-5vw' },
+        {
+          x: '5vw',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative w-full py-28 sm:py-36 bg-[#F8FBFC] overflow-hidden border-t border-[#B9E3F9]/40">
-      {/* Background Ambient Aura */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] rounded-full ambient-glow-teal opacity-20 pointer-events-none" />
+    <section
+      ref={sectionRef}
+      className="py-20 md:py-28 bg-[#374321] text-[#F8F6F5] relative overflow-hidden"
+    >
+      {/* Subtle Environmental Watermark: "PURE HARVEST" centered and smoothly responsive */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none z-0"
+      >
+        <div
+          ref={watermarkRef}
+          className="whitespace-nowrap font-black leading-none text-white/[0.045] select-none pointer-events-none tracking-tight will-change-transform text-[clamp(2.5rem,7.5vw,7.5rem)] text-center px-4"
+        >
+          PURE HARVEST
+        </div>
+      </div>
 
-      <div className="max-w-5xl mx-auto px-6 md:px-10 relative z-10 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-6 shadow-xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
-          <span>Cryogenic Preservation • Experience Leafora Fresh</span>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 text-center relative z-10 space-y-8">
+        
+        <div className="space-y-4">
+          <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
+            <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
+            <span>READY TO COOK</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#F8F6F5] leading-tight tracking-tight">
+            Taste the difference of vegetables and aromatics frozen at harvest peak.
+          </h2>
+          <p className="text-base sm:text-lg text-[#DED6CC]/85 max-w-2xl mx-auto leading-relaxed">
+            Zero prep waste, no chemical preservatives, and real garden flavor locked into every pack. Explore our harvest catalog or talk directly with our team.
+          </p>
         </div>
 
-        {/* Headline */}
-        <h2 className="text-4xl sm:text-6xl md:text-7xl font-heading font-black text-[#0F172A] tracking-tight uppercase leading-[0.95]">
-          FRESHNESS IS NO LONGER
-          <br />
-          <span className="text-gradient-ice">BOUND BY SEASON OR TIME.</span>
-        </h2>
-
-        <p className="text-base sm:text-lg text-[#0F172A]/70 max-w-2xl mx-auto mt-6 leading-relaxed">
-          Experience how GLACIAL™ cryogenic flash-freezing locks biological vibrancy, crisp texture, and zero kitchen waste for your culinary operation.
-        </p>
-
-        {/* Action Group */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
-          <button
-            onClick={onRequestSample}
-            className="group relative inline-flex items-center gap-3 px-9 py-4.5 rounded-full bg-[#0F172A] text-white text-sm font-semibold tracking-wide shadow-[0_12px_30px_-5px_rgba(15,23,42,0.3)] hover:shadow-[0_18px_35px_-5px_rgba(20,184,166,0.4)] transition-all duration-300 hover:scale-[1.02]"
+        {/* Dual Actions */}
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <Link
+            to="/products"
+            className="px-8 py-4 rounded-full bg-[#8DA256] text-[#22241D] text-xs sm:text-sm font-bold tracking-wide hover:bg-[#A3B86E] transition-all duration-200 shadow-lg flex items-center gap-2"
           >
-            <span>Request Complimentary Sample Shipper</span>
-            <div className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-transform duration-300">
-              <ArrowRight className="w-3.5 h-3.5 text-[#A8E6CF]" />
-            </div>
-          </button>
+            <span>Explore All Products</span>
+            <ArrowUpRight className="w-4 h-4 text-[#22241D]" />
+          </Link>
 
-          <button
-            onClick={onOpenCalculator}
-            className="inline-flex items-center gap-2 px-8 py-4.5 rounded-full bg-white text-[#0F172A] text-sm font-semibold tracking-wide border border-[#B9E3F9] backdrop-blur-md shadow-xs transition-all duration-300 hover:border-[#14B8A6]/60 hover:bg-slate-50"
+          <Link
+            to="/contact"
+            className="px-8 py-4 rounded-full bg-white/10 text-white text-xs sm:text-sm font-bold tracking-wide border border-white/20 hover:bg-white/20 transition-all duration-200 flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-[#14B8A6]" />
-            <span>Calculate Kitchen Yield Savings</span>
-          </button>
+            <Mail className="w-4 h-4 text-[#8DA256]" />
+            <span>Contact Leafora Fresh</span>
+          </Link>
         </div>
 
-        {/* Verification Guarantee */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-[#0F172A]/60 mt-12 font-medium">
-          <span className="flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-[#14B8A6]" />
-            Complimentary Next-Day Cold Shipper
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-[#14B8A6]" />
-            Zero Minimum Order Commitment for Testing
-          </span>
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#14B8A6]" />
-            100% Unbroken -18°C Guarantee
-          </span>
+        {/* Quiet Verified Reassurance */}
+        <div className="pt-6 text-xs text-[#DED6CC]/60 flex items-center justify-center gap-6">
+          <span>HACCP Compliant Cold-Chain</span>
+          <span>•</span>
+          <span>100% Usable Yield</span>
+          <span>•</span>
+          <span>Clean Label Guaranteed</span>
         </div>
+
       </div>
     </section>
   );

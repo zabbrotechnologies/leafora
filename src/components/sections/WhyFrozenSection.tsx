@@ -1,261 +1,90 @@
-import React, { useState } from 'react';
-import { CheckCircle2, XCircle, Zap, TrendingUp, Clock, Scale } from 'lucide-react';
-
-interface ValuePillar {
-  id: string;
-  stepNumber: string;
-  title: string;
-  headline: string;
-  description: string;
-  image: string;
-  icon: typeof Zap;
-  metricComparison: {
-    leafora: string;
-    leaforaLabel: string;
-    supermarket: string;
-    supermarketLabel: string;
-  };
-  keyAdvantages: string[];
-}
-
-const VALUE_PILLARS: ValuePillar[] = [
-  {
-    id: 'freshness',
-    stepNumber: '01',
-    title: 'Peak Harvest Freshness',
-    headline: 'Flavor and Nutrients Locked at Morning Harvest.',
-    description: 'Raw market produce often spends days traveling and sitting on shelves, losing its crispness and natural sweetness. Leafora flash-freezes within hours of picking, keeping the fresh-from-the-field taste and vibrant color intact.',
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop',
-    icon: Zap,
-    metricComparison: {
-      leafora: '98.4%',
-      leaforaLabel: 'Natural Vitamin & Flavor Retention',
-      supermarket: '52.0%',
-      supermarketLabel: 'Average Perishable Shelf Retention',
-    },
-    keyAdvantages: [
-      'Crisp texture and bright natural green',
-      'Naturally sweet taste with zero additives',
-      'No chemical wax or preservatives',
-    ],
-  },
-  {
-    id: 'zero-waste',
-    stepNumber: '02',
-    title: '100% Usable Yield',
-    headline: 'Zero Peeling. Zero Stems. 100% Usable Food.',
-    description: 'Peeling garlic, grating fresh coconut, and trimming vegetable stems produces up to 35% waste. With Leafora, every single gram you buy goes directly into your recipe with zero food wasted in your trash.',
-    image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1200&auto=format&fit=crop',
-    icon: Scale,
-    metricComparison: {
-      leafora: '100%',
-      leaforaLabel: 'Net Usable Food per Pack',
-      supermarket: '65.0%',
-      supermarketLabel: 'Average Raw Produce Usable Portion',
-    },
-    keyAdvantages: [
-      'Zero prep waste in your kitchen',
-      'Predictable portion control and real savings',
-      'Washed, peeled, and sorted at source',
-    ],
-  },
-  {
-    id: 'convenience',
-    stepNumber: '03',
-    title: 'Instant Pan Ready',
-    headline: 'Straight Into Your Pan in Under 3 Minutes.',
-    description: 'Stone-crushed ginger, garlic, green chilli, and coastal coconut blocks melt seamlessly in hot oil or ghee. Eliminate 30 minutes of daily peeling, pounding, and chopping.',
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=1200&auto=format&fit=crop',
-    icon: Clock,
-    metricComparison: {
-      leafora: '25 Secs',
-      leaforaLabel: 'Direct Pan Melt Dissolution',
-      supermarket: '35 Mins',
-      supermarketLabel: 'Traditional Peeling & Grinding Prep',
-    },
-    keyAdvantages: [
-      'Direct-to-pan from freezer (-18°C)',
-      'Zero thawing or waterlogging',
-      'Fast cooking in busy meal times',
-    ],
-  },
-  {
-    id: 'consistency',
-    stepNumber: '04',
-    title: 'Year-Round Consistency',
-    headline: 'Same Great Taste and Quality in Every Season.',
-    description: 'Seasonal monsoons and summer heat cause market prices to spike and vegetable quality to fluctuate. Leafora delivers the exact same sweetness, color, and texture 365 days a year.',
-    image: 'https://images.unsplash.com/photo-1483664852095-d6cc6870702d?q=80&w=1200&auto=format&fit=crop',
-    icon: TrendingUp,
-    metricComparison: {
-      leafora: '0% Fluctuation',
-      leaforaLabel: 'Year-Round Flavor & Texture Variance',
-      supermarket: '±45%',
-      supermarketLabel: 'Seasonal Price & Quality Volatility',
-    },
-    keyAdvantages: [
-      'Consistent culinary results every time',
-      'Stable pricing without seasonal spikes',
-      'Long-lasting freshness in your freezer',
-    ],
-  },
-];
+import React from 'react';
 
 export const WhyFrozenSection: React.FC = () => {
-  const [activePillarId, setActivePillarId] = useState<string>('freshness');
-  const activePillar =
-    VALUE_PILLARS.find((p) => p.id === activePillarId) || VALUE_PILLARS[0];
+  const points = [
+    {
+      title: 'Peak Harvest Nutrition Locked in Hours',
+      explanation:
+        'Vegetables begin losing water-soluble vitamins and natural sugars the moment they are harvested. By flash-freezing at -40°C directly near regional farms, we stop enzyme breakdown and seal in garden-fresh taste naturally.',
+    },
+    {
+      title: 'Zero Waste — Every Gram is Usable Food',
+      explanation:
+        'Peeling garlic, trimming herb stems, and grating fresh coconut typically produces 25% to 35% food waste in your trash. Leafora handles all prep at origin, meaning 100% of the pack goes straight into your recipe.',
+    },
+    {
+      title: 'Pan-Ready Convenience in 25 Seconds',
+      explanation:
+        'No defrosting required overnight. Pure coconut blocks and stone-crushed aromatics are calibrated to melt smoothly into hot ghee, oil, or gravies in seconds, keeping cooking authentic yet effortless.',
+    },
+  ];
 
   return (
-    <section
-      id="why-frozen"
-      className="relative w-full py-24 sm:py-36 bg-[#F8FBFC] overflow-hidden border-t border-[#B9E3F9]/40"
-    >
-      {/* Background Ambient Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[70vw] h-[70vw] rounded-full ambient-glow-green opacity-20 pointer-events-none -z-10" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
+    <section className="py-20 md:py-28 bg-[#F8F6F5]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+        
         {/* Section Header */}
-        <div className="max-w-3xl mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full frost-badge text-xs font-semibold tracking-wider text-[#0F172A] uppercase mb-4 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.6)]" />
-            <span>The Science of Cryogenic Superiority</span>
+        <div className="max-w-3xl mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
+            <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
+            <span>Why Leafora</span>
           </div>
-
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-black text-[#0F172A] tracking-tight uppercase leading-[1.05]">
-            WHY LEAFORA.
-            <br />
-            <span className="text-gradient-ice">PROVEN GASTRONOMY ADVANTAGES.</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-[#22241D] leading-tight tracking-tight">
+            Real food loses vitality in transit. We lock it before it leaves the harvest belt.
           </h2>
-
-          <p className="text-base sm:text-lg text-[#0F172A]/75 mt-4 leading-relaxed">
-            Discover why leading executive chefs and modern home kitchens choose cryogenic preservation over perishable market produce. Select a value pillar below to inspect comparative telemetry.
+          <p className="text-base sm:text-lg text-[#575D4E] leading-relaxed">
+            Flash-freezing is nature’s pause button. It allows us to deliver field-quality taste to your kitchen without adding a single artificial preservative.
           </p>
         </div>
 
-        {/* Interactive Master Stage: Left Visual + Right Pillar Selectors */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left: Dynamic Visual & Comparative Gauge */}
-          <div className="lg:col-span-6">
-            <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-              {/* Dynamic Image with Crossfade */}
-              <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-6 bg-[#0F172A]/5 shadow-md">
-                <img
-                  key={activePillar.id}
-                  src={activePillar.image}
-                  alt={activePillar.headline}
-                  className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/80 via-transparent to-transparent pointer-events-none" />
-
-                <div className="absolute top-4 left-4 z-20 px-3.5 py-1.5 rounded-full bg-[#0F172A]/85 backdrop-blur-md text-[#A8E6CF] text-xs font-mono font-bold border border-white/20">
-                  PILLAR {activePillar.stepNumber} • {activePillar.title.toUpperCase()}
+        {/* Editorial Layout: Points + Large Supporting Visual */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* 3 Meaningful Points */}
+          <div className="lg:col-span-7 space-y-8">
+            {points.map((pt, idx) => (
+              <div key={pt.title} className="flex gap-4 sm:gap-6 items-start">
+                <div className="shrink-0 mt-0.5">
+                  <span className="text-sm font-bold font-mono text-[#8DA256] tracking-wider block">
+                    0{idx + 1}.
+                  </span>
                 </div>
-
-                <div className="absolute bottom-4 left-4 right-4 z-20 text-white">
-                  <h4 className="font-heading text-lg sm:text-xl font-bold drop-shadow-md">
-                    {activePillar.headline}
-                  </h4>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-heading font-bold text-[#22241D]">
+                    {pt.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-[#575D4E] leading-relaxed">
+                    {pt.explanation}
+                  </p>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {/* Comparative Metrics Head-to-Head */}
-              <div className="space-y-3">
-                <div className="p-4 rounded-2xl bg-emerald-50/80 border border-[#A8E6CF]/80 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#14B8A6] shrink-0" />
-                    <span className="text-xs font-semibold text-[#0F172A]">
-                      {activePillar.metricComparison.leaforaLabel}
-                    </span>
-                  </div>
-                  <span className="text-lg font-mono font-black text-[#14B8A6] shrink-0">
-                    {activePillar.metricComparison.leafora}
-                  </span>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-slate-100/80 border border-slate-200/80 flex items-center justify-between opacity-80">
-                  <div className="flex items-center gap-3">
-                    <XCircle className="w-5 h-5 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium text-slate-600">
-                      {activePillar.metricComparison.supermarketLabel}
-                    </span>
-                  </div>
-                  <span className="text-base font-mono font-bold text-slate-600 shrink-0">
-                    {activePillar.metricComparison.supermarket}
-                  </span>
-                </div>
+          {/* Supporting Visual: Genuine Food Photography */}
+          <div className="lg:col-span-5">
+            <div className="rounded-3xl overflow-hidden bg-white border border-[#E4DDD4] shadow-[0_12px_36px_-10px_rgba(55,67,33,0.08)]">
+              <div className="aspect-[4/3] sm:aspect-[5/4] overflow-hidden">
+                <img
+                  src="/images/frozen_greens.jpg"
+                  alt="Farm greens harvested and steam-blanched to lock chlorophyll vitality"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-103"
+                  loading="lazy"
+                />
+              </div>
+              <div className="p-6 bg-white border-t border-[#E4DDD4] space-y-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#8DA256]">
+                  SOURCE INTEGRITY
+                </span>
+                <p className="text-xs text-[#575D4E] leading-relaxed">
+                  Tender spinach, fenugreek, and coriander blanched and frozen in suspended cold air within hours of plucking.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Right: 4 Interactive Value Pillar Cards */}
-          <div className="lg:col-span-6 flex flex-col gap-4">
-            {VALUE_PILLARS.map((pillar) => {
-              const isActive = pillar.id === activePillar.id;
-              const Icon = pillar.icon;
-              return (
-                <div
-                  key={pillar.id}
-                  onClick={() => setActivePillarId(pillar.id)}
-                  className={`p-6 rounded-3xl transition-all duration-300 cursor-pointer ${
-                    isActive
-                      ? 'bg-white shadow-xl border-2 border-[#14B8A6] translate-x-2'
-                      : 'bg-white/60 hover:bg-white/90 border border-[#B9E3F9]/50 hover:shadow-md'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-2xl flex items-center justify-center font-mono font-bold text-sm ${
-                          isActive
-                            ? 'bg-[#14B8A6] text-white shadow-md'
-                            : 'bg-[#0F172A]/5 text-[#0F172A]/70'
-                        }`}
-                      >
-                        {pillar.stepNumber}
-                      </div>
-
-                      <div>
-                        <span className="text-[11px] font-mono font-bold text-[#14B8A6] uppercase tracking-wider block">
-                          ADVANTAGE {pillar.stepNumber}
-                        </span>
-                        <h3 className="text-lg sm:text-xl font-heading font-black text-[#0F172A]">
-                          {pillar.title}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <Icon
-                      className={`w-5 h-5 ${
-                        isActive ? 'text-[#14B8A6]' : 'text-[#0F172A]/30'
-                      }`}
-                    />
-                  </div>
-
-                  {/* Expanded info on active */}
-                  {isActive && (
-                    <div className="mt-4 pt-4 border-t border-[#B9E3F9]/40 space-y-3 transition-all duration-300">
-                      <p className="text-xs sm:text-sm text-[#0F172A]/75 leading-relaxed">
-                        {pillar.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        {pillar.keyAdvantages.map((adv, i) => (
-                          <span
-                            key={i}
-                            className="px-2.5 py-1 rounded-lg bg-[#F8FBFC] border border-[#B9E3F9]/60 text-[11px] font-semibold text-[#0F172A]/80"
-                          >
-                            ✓ {adv}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
+
       </div>
     </section>
   );

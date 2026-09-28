@@ -25,11 +25,11 @@ export const FreezingMomentSection: React.FC = () => {
 
     // Frost opacity and blur
     if (frostLensRef.current) {
-      gsap.set(frostLensRef.current, {
-        opacity: progress * 0.95,
-        backdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
-        webkitBackdropFilter: `blur(${progress * (isDesktop ? 14 : 8)}px)`,
-      });
+      const blurPx = progress * (isDesktop ? 14 : 8);
+      frostLensRef.current.style.opacity = String(progress * 0.95);
+      frostLensRef.current.style.backdropFilter = `blur(${blurPx}px)`;
+      // webkit prefix set directly on style (GSAP doesn't support vendor-prefixed camelCase)
+      (frostLensRef.current.style as CSSStyleDeclaration & { webkitBackdropFilter: string }).webkitBackdropFilter = `blur(${blurPx}px)`;
     }
 
     // Headline reveal when progress > 0.35
