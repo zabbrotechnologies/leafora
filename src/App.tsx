@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,7 +12,8 @@ import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { AboutPage } from './pages/AboutPage';
-import { ContactPage } from './pages/ContactPage';
+import { CulinaryGuidePage } from './pages/CulinaryGuidePage';
+import { B2BPage } from './pages/B2BPage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,7 +51,7 @@ export function App() {
   return (
     <BrowserRouter>
       <div className="relative min-h-screen bg-[#F8F6F5] text-[#22241D] flex flex-col justify-between">
-        {/* Reset scroll on route change */}
+        {/* Reset scroll on route change or scroll to hash */}
         <ScrollToTop />
 
         {/* Minimal Navigation */}
@@ -62,8 +63,11 @@ export function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:id" element={<ProductDetailPage />} />
+            <Route path="/culinary-guide" element={<CulinaryGuidePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/b2b" element={<B2BPage />} />
+            {/* Contact route redirects smoothly to homepage #reach-us */}
+            <Route path="/contact" element={<Navigate to="/#reach-us" replace />} />
             {/* Catch-all redirect to Home */}
             <Route path="*" element={<HomePage />} />
           </Routes>

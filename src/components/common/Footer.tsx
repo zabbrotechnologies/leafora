@@ -11,8 +11,10 @@ export const Footer: React.FC = () => {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Our Products', path: '/products' },
+    { label: 'Culinary Guide', path: '/culinary-guide' },
     { label: 'Our Story', path: '/about' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'B2B Supply', path: '/b2b' },
+    { label: 'Reach Us', path: '/#reach-us' },
   ];
 
   const productLinks = [

@@ -72,7 +72,7 @@ export const WhyFrozenSection: React.FC = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="p-6 bg-white border-t border-[#E4DDD4] space-y-1">
+              <div className="p-6 bg-white space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#8DA256]">
                   SOURCE INTEGRITY
                 </span>

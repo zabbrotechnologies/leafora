@@ -236,7 +236,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = () => {
                     {rel.subtitle || rel.tagline}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#E4DDD4] flex items-center justify-between text-xs font-bold text-[#374321]">
+                <div className="mt-4 pt-2 flex items-center justify-between text-xs font-bold text-[#374321]">
                   <span>View Details</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </div>

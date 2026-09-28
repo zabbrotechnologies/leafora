@@ -191,7 +191,7 @@ export const ProductsPage: React.FC = () => {
                   </div>
 
                   {/* Highlights */}
-                  <div className="pt-4 border-t border-[#E4DDD4] space-y-2 text-xs text-[#575D4E]">
+                  <div className="pt-3 space-y-2 text-xs text-[#575D4E]">
                     <div className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-[#8DA256] shrink-0" />
                       <span>{product.packSizes[0]}</span>

@@ -1,10 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Mail } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface FinalCtaSectionProps {
   onRequestSample?: () => void;
@@ -12,56 +8,19 @@ interface FinalCtaSectionProps {
 }
 
 export const FinalCtaSection: React.FC<FinalCtaSectionProps> = () => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const watermarkRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const watermark = watermarkRef.current;
-    if (!section || !watermark) return;
-
-    // Smooth horizontal parallax scroll animation on faded background text
-    // Centered when the section is in view, gliding smoothly on scroll
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        watermark,
-        { x: '-5vw' },
-        {
-          x: '5vw',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2,
-          },
-        }
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
+  const handleScrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const contactElem = document.getElementById('reach-us') || document.getElementById('contact');
+    if (contactElem) {
+      contactElem.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.location.href = '/#reach-us';
+    }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-20 md:py-28 bg-[#374321] text-[#F8F6F5] relative overflow-hidden"
-    >
-      {/* Subtle Environmental Watermark: "PURE HARVEST" centered and smoothly responsive */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none z-0"
-      >
-        <div
-          ref={watermarkRef}
-          className="whitespace-nowrap font-black leading-none text-white/[0.045] select-none pointer-events-none tracking-tight will-change-transform text-[clamp(2.5rem,7.5vw,7.5rem)] text-center px-4"
-        >
-          PURE HARVEST
-        </div>
-      </div>
-
+    <section className="py-20 md:py-28 bg-[#374321] text-[#F8F6F5] relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 text-center relative z-10 space-y-8">
-        
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.22em] text-[#8DA256]">
             <span className="w-5 h-[1.5px] bg-[#8DA256] rounded-full" />
@@ -86,13 +45,14 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = () => {
             <ArrowUpRight className="w-4 h-4 text-[#22241D]" />
           </Link>
 
-          <Link
-            to="/contact"
-            className="px-8 py-4 rounded-full bg-white/10 text-white text-xs sm:text-sm font-bold tracking-wide border border-white/20 hover:bg-white/20 transition-all duration-200 flex items-center gap-2"
+          <a
+            href="#reach-us"
+            onClick={handleScrollToContact}
+            className="px-8 py-4 rounded-full bg-white/10 text-white text-xs sm:text-sm font-bold tracking-wide border border-white/20 hover:bg-white/20 transition-all duration-200 flex items-center gap-2 cursor-pointer"
           >
             <Mail className="w-4 h-4 text-[#8DA256]" />
-            <span>Contact Leafora Fresh</span>
-          </Link>
+            <span>Reach Us Directly</span>
+          </a>
         </div>
 
         {/* Quiet Verified Reassurance */}
@@ -103,7 +63,6 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = () => {
           <span>•</span>
           <span>Clean Label Guaranteed</span>
         </div>
-
       </div>
     </section>
   );

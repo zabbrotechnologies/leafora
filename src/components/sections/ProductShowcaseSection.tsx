@@ -71,7 +71,7 @@ export const ProductShowcaseSection: React.FC = () => {
                 </div>
 
                 {/* Practical Verified Highlights */}
-                <div className="pt-4 border-t border-[#E4DDD4] flex items-center justify-between text-xs font-semibold text-[#374321]">
+                <div className="pt-3 flex items-center justify-between text-xs font-semibold text-[#374321]">
                   <span>View Product Details</span>
                   <div className="w-7 h-7 rounded-full bg-[#F3EFEA] border border-[#E4DDD4] group-hover:bg-[#374321] group-hover:text-white transition-colors flex items-center justify-center">
                     <ArrowUpRight className="w-3.5 h-3.5" />

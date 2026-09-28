@@ -5,12 +5,14 @@ import { BrandIntroSection } from '../components/sections/BrandIntroSection';
 import { WhyFrozenSection } from '../components/sections/WhyFrozenSection';
 import { ProductShowcaseSection } from '../components/sections/ProductShowcaseSection';
 import { BrandStorySection } from '../components/sections/BrandStorySection';
+import { TestimonialsSection } from '../components/sections/TestimonialsSection';
+import { ContactSection } from '../components/sections/ContactSection';
 import { FinalCtaSection } from '../components/sections/FinalCtaSection';
 
 export const HomePage: React.FC = () => {
   return (
     <main className="relative z-10">
-      {/* 1. What is Leafora? Clear hero statement with authentic product imagery */}
+      {/* 1. What is Leafora? Clear hero statement with Image 4 card design */}
       <HeroSection />
 
       {/* Subtle continuous CSS marquee divider */}
@@ -28,7 +30,13 @@ export const HomePage: React.FC = () => {
       {/* 5. Who is behind the brand? Editorial philosophy teaser linking to /about */}
       <BrandStorySection />
 
-      {/* 6. What can I do next? Clear next action to explore products or contact */}
+      {/* 6. Verified Chef & Kitchen Reviews / Testimonials */}
+      <TestimonialsSection />
+
+      {/* 7. Direct Contact & Supply Inquiries */}
+      <ContactSection />
+
+      {/* 8. Ready to Cook Final Call to Action */}
       <FinalCtaSection />
     </main>
   );

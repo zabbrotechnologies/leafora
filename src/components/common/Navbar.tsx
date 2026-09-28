@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { LeaforaLogo } from './LeaforaLogo';
 
@@ -12,6 +12,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,13 +31,28 @@ export const Navbar: React.FC<NavbarProps> = () => {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Our Products', path: '/products' },
+    { label: 'Culinary Guide', path: '/culinary-guide' },
     { label: 'Our Story', path: '/about' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'B2B Supply', path: '/b2b' },
   ];
 
   const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
+    if (path === '/') return location.pathname === '/' && !location.hash;
     return location.pathname.startsWith(path);
+  };
+
+  const handleReachUsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    if (location.pathname === '/') {
+      const elem = document.getElementById('reach-us');
+      if (elem) {
+        elem.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate('/#reach-us');
+    }
   };
 
   return (
@@ -44,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'py-3.5 bg-[#F8F6F5]/95 backdrop-blur-md border-b border-[#E4DDD4] shadow-[0_4px_24px_-4px_rgba(55,67,33,0.06)]'
+            ? 'py-3 bg-[#F8F6F5]/95 backdrop-blur-md border-b border-[#E4DDD4] shadow-[0_4px_24px_-4px_rgba(55,67,33,0.06)]'
             : 'py-5 bg-transparent'
         }`}
       >
@@ -59,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1.5 bg-[#F3EFEA] border border-[#E4DDD4] rounded-full px-3 py-1.5 shadow-2xs">
+          <nav className="hidden lg:flex items-center gap-1 bg-[#F3EFEA] border border-[#E4DDD4] rounded-full px-3 py-1.5 shadow-2xs">
             {navLinks.map((link) => {
               const active = isActive(link.path);
               return (
@@ -78,19 +94,19 @@ export const Navbar: React.FC<NavbarProps> = () => {
             })}
           </nav>
 
-          {/* Action CTA */}
+          {/* Action CTA: Reach Us Button */}
           <div className="hidden sm:flex items-center gap-3">
-            <Link
-              to="/products"
+            <button
+              onClick={handleReachUsClick}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#374321] text-[#F8F6F5] text-xs font-semibold tracking-wide hover:bg-[#48572B] transition-all duration-200 shadow-xs cursor-pointer"
             >
-              <span>Explore Products</span>
+              <span>Reach Us</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#8DA256]" />
-            </Link>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2.5 rounded-full bg-[#F3EFEA] border border-[#E4DDD4] text-[#22241D] hover:bg-white transition-colors cursor-pointer"
@@ -104,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
 
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden bg-[#22241D]/40 backdrop-blur-xs flex flex-col justify-end">
+        <div className="fixed inset-0 z-40 lg:hidden bg-[#22241D]/40 backdrop-blur-xs flex flex-col justify-end">
           <div className="bg-[#F8F6F5] border-t border-[#E4DDD4] rounded-t-3xl p-6 shadow-2xl space-y-6">
             <div className="flex items-center justify-between pb-3 border-b border-[#E4DDD4]">
               <LeaforaLogo size="sm" />
@@ -116,14 +132,14 @@ export const Navbar: React.FC<NavbarProps> = () => {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-1.5">
               {navLinks.map((link) => {
                 const active = isActive(link.path);
                 return (
                   <Link
                     key={link.label}
                     to={link.path}
-                    className={`text-base font-semibold px-4 py-3 rounded-xl transition-colors ${
+                    className={`text-sm font-semibold px-4 py-3 rounded-2xl transition-colors ${
                       active
                         ? 'bg-[#374321] text-[#F8F6F5]'
                         : 'text-[#22241D] hover:bg-[#F3EFEA]'
@@ -136,13 +152,13 @@ export const Navbar: React.FC<NavbarProps> = () => {
             </nav>
 
             <div className="pt-2">
-              <Link
-                to="/products"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#374321] text-[#F8F6F5] font-semibold text-sm shadow-md"
+              <button
+                onClick={handleReachUsClick}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-[#374321] text-[#F8F6F5] font-semibold text-sm shadow-md cursor-pointer"
               >
-                <span>Explore Products</span>
+                <span>Reach Us</span>
                 <ArrowUpRight className="w-4 h-4 text-[#8DA256]" />
-              </Link>
+              </button>
             </div>
           </div>
         </div>

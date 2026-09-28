@@ -28,4 +28,5 @@ audit_screenshots/
 audit_results/
 test_*.mjs
 /*.png
+public/test_*.png
 webscrape_audit_report.json

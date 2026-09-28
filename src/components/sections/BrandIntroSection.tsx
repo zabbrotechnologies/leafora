@@ -119,7 +119,7 @@ export const BrandIntroSection: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#E4DDD4]/60">
+              <div className="pt-5 mt-5">
                 <Link
                   to="/products"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#374321] hover:text-[#586E2B] transition-colors"
